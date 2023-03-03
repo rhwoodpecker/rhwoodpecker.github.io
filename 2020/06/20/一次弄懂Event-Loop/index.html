@@ -94,12 +94,12 @@
 
 
 
-<meta name="description" content="前言Event Loop 即事件循环，是指浏览器或 Node 的一种解决 javaScript 单线程运行时不会阻塞的一种机制，也就是我们经常使用异步的原理。 为啥要弄懂Event Loop 是要增加自己技术的深度，也就是懂得 JavaScript 的运行机制。 现在在前端领域各种技术层出不穷，掌握底层原理，可以让自己以不变，应万变。 应对各大互联网公司的面试，懂其原理，题目任其发挥。  堆、栈、">
+<meta name="description" content="前言Event Loop 即事件循环，是指浏览器或 Node 的一种解决 javaScript 单线程运行时不会阻塞的一种机制，也就是我们经常使用异步的原理。 为啥要弄懂Event Loop 是要增加自己技术的深度，也就是懂得 JavaScript 的运行机制。 现在在前端领域各种技术层出不穷，掌握底层原理，可以让自己以不变，应万变。 应对各大互联网公司的面试，懂其原理，题目任其发挥。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="一次弄懂Event Loop">
 <meta property="og:url" content="http://example.com/2020/06/20/%E4%B8%80%E6%AC%A1%E5%BC%84%E6%87%82Event-Loop/index.html">
 <meta property="og:site_name" content="个人博客">
-<meta property="og:description" content="前言Event Loop 即事件循环，是指浏览器或 Node 的一种解决 javaScript 单线程运行时不会阻塞的一种机制，也就是我们经常使用异步的原理。 为啥要弄懂Event Loop 是要增加自己技术的深度，也就是懂得 JavaScript 的运行机制。 现在在前端领域各种技术层出不穷，掌握底层原理，可以让自己以不变，应万变。 应对各大互联网公司的面试，懂其原理，题目任其发挥。  堆、栈、">
+<meta property="og:description" content="前言Event Loop 即事件循环，是指浏览器或 Node 的一种解决 javaScript 单线程运行时不会阻塞的一种机制，也就是我们经常使用异步的原理。 为啥要弄懂Event Loop 是要增加自己技术的深度，也就是懂得 JavaScript 的运行机制。 现在在前端领域各种技术层出不穷，掌握底层原理，可以让自己以不变，应万变。 应对各大互联网公司的面试，懂其原理，题目任其发挥。">
 <meta property="og:locale">
 <meta property="og:image" content="https://user-images.githubusercontent.com/22131908/156586737-6dcc4e2b-9517-4135-b4f6-d42bdf24e4c5.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/22131908/156587249-95dd8d06-3d8a-435d-9189-837decbdd27f.png">
@@ -114,7 +114,7 @@
 <meta property="og:image" content="https://user-images.githubusercontent.com/22131908/156738979-d42a43d2-ebbf-4084-b77f-3dc5d0e04c8a.png">
 <meta property="og:image" content="https://user-images.githubusercontent.com/22131908/156739808-c9a26120-941c-4309-ba52-2aeb928ec080.png">
 <meta property="article:published_time" content="2020-06-20T09:26:28.000Z">
-<meta property="article:modified_time" content="2023-03-03T13:20:37.930Z">
+<meta property="article:modified_time" content="2023-03-03T14:22:31.908Z">
 <meta property="article:author" content="Ren Hao">
 <meta property="article:tag" content="EventLoop">
 <meta name="twitter:card" content="summary">
@@ -347,7 +347,7 @@
 <h2 id="为啥要弄懂Event-Loop"><a href="#为啥要弄懂Event-Loop" class="headerlink" title="为啥要弄懂Event Loop"></a>为啥要弄懂Event Loop</h2><ul>
 <li>是要增加自己技术的深度，也就是懂得 <code>JavaScript</code> 的运行机制。</li>
 <li>现在在前端领域各种技术层出不穷，掌握底层原理，可以让自己以不变，应万变。</li>
-<li>应对各大互联网公司的面试，懂其原理，题目任其发挥。</li>
+<li>应对各大互联网公司的面试，懂其原理，题目任其发挥。<span id="more"></span></li>
 </ul>
 <h2 id="堆、栈、队列"><a href="#堆、栈、队列" class="headerlink" title="堆、栈、队列"></a>堆、栈、队列</h2><p><img src="https://user-images.githubusercontent.com/22131908/156586737-6dcc4e2b-9517-4135-b4f6-d42bdf24e4c5.png" alt="image"></p>
 <h4 id="堆（Heap）"><a href="#堆（Heap）" class="headerlink" title="堆（Heap）"></a>堆（Heap）</h4><p><strong>堆</strong>是一种数据结构，是利用完全二叉树维护的一组数据，<strong>堆</strong>分为两种，一种为<strong>最大堆</strong>，一种为<strong>最小堆</strong>，将根节点<strong>最大</strong>的堆叫做<strong>最大堆</strong>或<strong>大根堆</strong>，根节点<strong>最小</strong>的堆叫做<strong>最小堆</strong>或<strong>小根堆</strong>。<br>堆是<strong>线性数据结构</strong>，相当于<strong>一维数组</strong>，有唯一后继。</p>

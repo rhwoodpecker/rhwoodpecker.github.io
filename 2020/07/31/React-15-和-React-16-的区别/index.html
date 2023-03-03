@@ -102,7 +102,7 @@
 <meta property="og:description" content="结构react15的架构可以分为两层： Reconciler（协调器）— 找出需要更新的组件，以及标识出如何更新 Renderer（渲染器）— 负责将变化后的组件渲染到页面上  react16的架构可以分为三层： Scheduler（调度器）— 调度任务的优先级，高级优先级的优先进入 Reconciler 阶段 Reconciler（协调器）— 找出需要更新的组件，以及标识出如何更新 Render">
 <meta property="og:locale">
 <meta property="article:published_time" content="2020-07-31T12:46:30.000Z">
-<meta property="article:modified_time" content="2023-03-03T13:26:10.937Z">
+<meta property="article:modified_time" content="2023-03-03T14:22:46.727Z">
 <meta property="article:author" content="Ren Hao">
 <meta property="article:tag" content="react">
 <meta name="twitter:card" content="summary">
@@ -337,9 +337,9 @@
 <h2 id="react16的架构可以分为三层："><a href="#react16的架构可以分为三层：" class="headerlink" title="react16的架构可以分为三层："></a>react16的架构可以分为三层：</h2><ul>
 <li><code>Scheduler</code>（调度器）— 调度任务的优先级，高级优先级的优先进入 <code>Reconciler</code> 阶段</li>
 <li><code>Reconciler</code>（协调器）— 找出需要更新的组件，以及标识出如何更新</li>
-<li><code>Renderer</code>（渲染器）— 负责将变化后的组件渲染到页面上</li>
+<li><code>Renderer</code>（渲染器）— 负责将变化后的组件渲染到页面上<span id="more"></span> 
+浏览器的<code>16.6ms</code>机制</li>
 </ul>
-<p>浏览器的<code>16.6ms</code>机制</p>
 <p>对人眼来说，正常流畅的刷新率为<code>60hz</code>，即 <code>60帧</code>，即浏览器<code>16.6ms</code>刷新一次。</p>
 <p>我们知道js可以操作 <code>dom</code> 元素，所以浏览器的 <code>GUI</code> 线程和 <code>js</code> 线程是互斥的。<code>js</code> 的执行和浏览器的绘制、布局不能同时进行。所以在每 <code>16.6ms</code> 内浏览器要执行如下操作：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JS脚本执行 ------ 浏览器样式布局 ------ 浏览器样式绘制</span><br></pre></td></tr></table></figure>
