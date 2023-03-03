@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="react," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="结构react15的架构可以分为两层： Reconciler（协调器）— 找出需要更新的组件，以及标识出如何更新 Renderer（渲染器）— 负责将变化后的组件渲染到页面上  react16的架构可以分为三层： Scheduler（调度器）— 调度任务的优先级，高级优先级的优先进入 Reconciler 阶段 Reconciler（协调器）— 找出需要更新的组件，以及标识出如何更新 Render">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React 15 和 React 16 的区别">
+<meta property="og:url" content="http://example.com/2020/07/31/React-15-%E5%92%8C-React-16-%E7%9A%84%E5%8C%BA%E5%88%AB/index.html">
+<meta property="og:site_name" content="个人博客">
+<meta property="og:description" content="结构react15的架构可以分为两层： Reconciler（协调器）— 找出需要更新的组件，以及标识出如何更新 Renderer（渲染器）— 负责将变化后的组件渲染到页面上  react16的架构可以分为三层： Scheduler（调度器）— 调度任务的优先级，高级优先级的优先进入 Reconciler 阶段 Reconciler（协调器）— 找出需要更新的组件，以及标识出如何更新 Render">
+<meta property="og:locale">
+<meta property="article:published_time" content="2020-07-31T12:46:30.000Z">
+<meta property="article:modified_time" content="2023-03-03T13:26:10.937Z">
+<meta property="article:author" content="Ren Hao">
+<meta property="article:tag" content="react">
+<meta name="twitter:card" content="summary">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://example.com/2020/07/31/React-15-和-React-16-的区别/"/>
+
+
+
+
+
+  <title>React 15 和 React 16 的区别 | 个人博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/07/31/React-15-%E5%92%8C-React-16-%E7%9A%84%E5%8C%BA%E5%88%AB/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">React 15 和 React 16 的区别</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-31T20:46:30+08:00">
+                2020-07-31
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="结构"><a href="#结构" class="headerlink" title="结构"></a>结构</h1><h2 id="react15的架构可以分为两层："><a href="#react15的架构可以分为两层：" class="headerlink" title="react15的架构可以分为两层："></a>react15的架构可以分为两层：</h2><ul>
+<li><code>Reconciler</code>（协调器）— 找出需要更新的组件，以及标识出如何更新</li>
+<li><code>Renderer</code>（渲染器）— 负责将变化后的组件渲染到页面上</li>
+</ul>
+<h2 id="react16的架构可以分为三层："><a href="#react16的架构可以分为三层：" class="headerlink" title="react16的架构可以分为三层："></a>react16的架构可以分为三层：</h2><ul>
+<li><code>Scheduler</code>（调度器）— 调度任务的优先级，高级优先级的优先进入 <code>Reconciler</code> 阶段</li>
+<li><code>Reconciler</code>（协调器）— 找出需要更新的组件，以及标识出如何更新</li>
+<li><code>Renderer</code>（渲染器）— 负责将变化后的组件渲染到页面上</li>
+</ul>
+<p>浏览器的<code>16.6ms</code>机制</p>
+<p>对人眼来说，正常流畅的刷新率为<code>60hz</code>，即 <code>60帧</code>，即浏览器<code>16.6ms</code>刷新一次。</p>
+<p>我们知道js可以操作 <code>dom</code> 元素，所以浏览器的 <code>GUI</code> 线程和 <code>js</code> 线程是互斥的。<code>js</code> 的执行和浏览器的绘制、布局不能同时进行。所以在每 <code>16.6ms</code> 内浏览器要执行如下操作：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">JS脚本执行 ------ 浏览器样式布局 ------ 浏览器样式绘制</span><br></pre></td></tr></table></figure>
+
+<p>如果js脚本执行时间过长，超过16.6ms，这次刷新中浏览器绘制和布局就无法执行，这就会造成人眼可识别的卡顿，发现操作时浏览器没有“实时”做出反应。如：对于用户在输入框输入内容这个行为来说，就体现为按下了键盘按键但是页面上不实时显示输入。</p>
+<h2 id="区别"><a href="#区别" class="headerlink" title="区别"></a>区别</h2><h3 id="react-15"><a href="#react-15" class="headerlink" title="react 15"></a>react 15</h3><p><strong>react15</strong> 的 <code>reconciler</code> 是 <code>stack-reconciler</code>。</p>
+<p>即是采用递归形式工作的，是同步的，在生成虚拟 <code>dom</code> 树并 <code>diff</code> 过程中是无法中断的。</p>
+<p>这样在组件层级过深时，会造成js执行时间过长，浏览器无法布局和绘制，造成丢帧。</p>
+<h3 id="react-16"><a href="#react-16" class="headerlink" title="react 16"></a>react 16</h3><p><strong>react16</strong>的 <code>reconciler</code> 是 <code>fiber-reconciler</code>。</p>
+<p>即采用的异步可中断更新代替react15的同步更新，react16的 <code>scheduler</code> 调度器会告诉 <code>reconciler</code> ，浏览器是否有空闲时间执行js脚本。</p>
+<p>这样就不会影响浏览器的绘制和布局工作。不会丢帧。<br>在react16中，原来的虚拟 <code>DOM</code>,因其结构已不能满足异步可中断更新的需求，改而采用新的结构 <code>Fiber</code>。</p>
+<p><code>虚拟dom</code> 节对应变为 <code>Fiber 节点</code>，虚拟dom树对应变为 <code>Fiber树</code>。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/react/" rel="tag"># react</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2020/07/30/%E5%9B%BE%E8%A7%A3-script-%E6%A0%87%E7%AD%BE%E4%B8%AD%E7%9A%84-async-%E5%92%8C-defer-%E5%B1%9E%E6%80%A7/" rel="next" title="图解 script 标签中的 async 和 defer 属性">
+                <i class="fa fa-chevron-left"></i> 图解 script 标签中的 async 和 defer 属性
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/08/09/react-hooks%E4%B8%8Eclass%E7%BB%84%E4%BB%B6%E5%AF%B9%E6%AF%94/" rel="prev" title="react hooks与class组件对比">
+                react hooks与class组件对比 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/rhwoodpecker" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:rhwoodpecker@163.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                    
+                      E-Mail
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%BB%93%E6%9E%84"><span class="nav-number">1.</span> <span class="nav-text">结构</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#react15%E7%9A%84%E6%9E%B6%E6%9E%84%E5%8F%AF%E4%BB%A5%E5%88%86%E4%B8%BA%E4%B8%A4%E5%B1%82%EF%BC%9A"><span class="nav-number">1.1.</span> <span class="nav-text">react15的架构可以分为两层：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#react16%E7%9A%84%E6%9E%B6%E6%9E%84%E5%8F%AF%E4%BB%A5%E5%88%86%E4%B8%BA%E4%B8%89%E5%B1%82%EF%BC%9A"><span class="nav-number">1.2.</span> <span class="nav-text">react16的架构可以分为三层：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8C%BA%E5%88%AB"><span class="nav-number">1.3.</span> <span class="nav-text">区别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#react-15"><span class="nav-number">1.3.1.</span> <span class="nav-text">react 15</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#react-16"><span class="nav-number">1.3.2.</span> <span class="nav-text">react 16</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ren Hao</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
