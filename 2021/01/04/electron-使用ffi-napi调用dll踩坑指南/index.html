@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="async&defer," />
+  <meta name="keywords" content="electron ffi-napi," />
 
 
 
@@ -94,25 +94,20 @@
 
 
 
-<meta name="description" content="在 HTML 中会遇到以下三类 script：  &lt;script src&#x3D;&#39;xxx&#39;&gt;&lt;&#x2F;script&gt; &lt;script src&#x3D;&#39;xxx&#39; async&gt;&lt;&#x2F;script&gt; &lt;script src&#x3D;&#39;xxx&#39; defer&gt;&lt;&#x2F;script&gt;  那么这三类 script 有什么区别">
+<meta name="description" content="前言electron 通过 ffi-napi 调用 c++ 编译的动态链接库 dll，node 调用又要依赖 node-gyp 以及 windows-build-tools。废话不多说，上步骤。 步骤（按顺序安装） 安装 node-gyp, npm i -g node-gyp@latest ，这里我安装是最新版本，目前版本号是 node-gyp@9.0.0 设置 node_gyp 环境变量(这里是">
 <meta property="og:type" content="article">
-<meta property="og:title" content="图解 script 标签中的 async 和 defer 属性">
-<meta property="og:url" content="http://example.com/2020/07/30/%E5%9B%BE%E8%A7%A3-script-%E6%A0%87%E7%AD%BE%E4%B8%AD%E7%9A%84-async-%E5%92%8C-defer-%E5%B1%9E%E6%80%A7/index.html">
+<meta property="og:title" content="electron 使用ffi-napi调用dll踩坑指南">
+<meta property="og:url" content="http://example.com/2021/01/04/electron-%E4%BD%BF%E7%94%A8ffi-napi%E8%B0%83%E7%94%A8dll%E8%B8%A9%E5%9D%91%E6%8C%87%E5%8D%97/index.html">
 <meta property="og:site_name" content="个人博客">
-<meta property="og:description" content="在 HTML 中会遇到以下三类 script：  &lt;script src&#x3D;&#39;xxx&#39;&gt;&lt;&#x2F;script&gt; &lt;script src&#x3D;&#39;xxx&#39; async&gt;&lt;&#x2F;script&gt; &lt;script src&#x3D;&#39;xxx&#39; defer&gt;&lt;&#x2F;script&gt;  那么这三类 script 有什么区别">
+<meta property="og:description" content="前言electron 通过 ffi-napi 调用 c++ 编译的动态链接库 dll，node 调用又要依赖 node-gyp 以及 windows-build-tools。废话不多说，上步骤。 步骤（按顺序安装） 安装 node-gyp, npm i -g node-gyp@latest ，这里我安装是最新版本，目前版本号是 node-gyp@9.0.0 设置 node_gyp 环境变量(这里是">
 <meta property="og:locale">
-<meta property="og:image" content="https://user-images.githubusercontent.com/22131908/156511880-6cc4f42a-225d-406c-8fad-31dc6a360690.png">
-<meta property="og:image" content="https://user-images.githubusercontent.com/22131908/156512013-caef9049-da96-40c3-9b1f-ea500883f72c.png">
-<meta property="og:image" content="https://user-images.githubusercontent.com/22131908/156512078-ba9bca83-12e4-4a68-a480-26f1ccfbc8ef.png">
-<meta property="og:image" content="https://user-images.githubusercontent.com/22131908/156512159-a4d76bf9-e1f4-44d6-9c26-2d7e09bbb4a4.png">
-<meta property="og:image" content="https://user-images.githubusercontent.com/22131908/156512240-f9f4127f-6f54-4f06-b091-7c5889c3c99e.png">
-<meta property="og:image" content="https://user-images.githubusercontent.com/22131908/156512315-482c78e4-bfcd-488c-aad4-d907193d1637.png">
-<meta property="article:published_time" content="2020-07-30T13:10:40.000Z">
-<meta property="article:modified_time" content="2023-03-03T14:22:18.408Z">
+<meta property="og:image" content="http://example.com/2021/01/04/electron-%E4%BD%BF%E7%94%A8ffi-napi%E8%B0%83%E7%94%A8dll%E8%B8%A9%E5%9D%91%E6%8C%87%E5%8D%97/electron.png">
+<meta property="article:published_time" content="2021-01-04T12:44:29.000Z">
+<meta property="article:modified_time" content="2023-03-04T13:50:42.228Z">
 <meta property="article:author" content="Ren Hao">
-<meta property="article:tag" content="async&amp;defer">
+<meta property="article:tag" content="electron ffi-napi">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://user-images.githubusercontent.com/22131908/156511880-6cc4f42a-225d-406c-8fad-31dc6a360690.png">
+<meta name="twitter:image" content="http://example.com/2021/01/04/electron-%E4%BD%BF%E7%94%A8ffi-napi%E8%B0%83%E7%94%A8dll%E8%B8%A9%E5%9D%91%E6%8C%87%E5%8D%97/electron.png">
 
 
 
@@ -141,13 +136,13 @@
 
 
 
-  <link rel="canonical" href="http://example.com/2020/07/30/图解-script-标签中的-async-和-defer-属性/"/>
+  <link rel="canonical" href="http://example.com/2021/01/04/electron-使用ffi-napi调用dll踩坑指南/"/>
 
 
 
 
 
-  <title>图解 script 标签中的 async 和 defer 属性 | 个人博客</title>
+  <title>electron 使用ffi-napi调用dll踩坑指南 | 个人博客</title>
   
 
 
@@ -270,7 +265,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/07/30/%E5%9B%BE%E8%A7%A3-script-%E6%A0%87%E7%AD%BE%E4%B8%AD%E7%9A%84-async-%E5%92%8C-defer-%E5%B1%9E%E6%80%A7/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/01/04/electron-%E4%BD%BF%E7%94%A8ffi-napi%E8%B0%83%E7%94%A8dll%E8%B8%A9%E5%9D%91%E6%8C%87%E5%8D%97/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -287,7 +282,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">图解 script 标签中的 async 和 defer 属性</h1>
+          <h1 class="post-title" itemprop="name headline">electron 使用ffi-napi调用dll踩坑指南</h1>
         
 
         <div class="post-meta">
@@ -299,8 +294,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-30T21:10:40+08:00">
-                2020-07-30
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-01-04T20:44:29+08:00">
+                2021-01-04
               </time>
             
 
@@ -337,45 +332,19 @@
       
 
       
-        <p>在 HTML 中会遇到以下三类 script：</p>
-<ul>
-<li><code>&lt;script src=&#39;xxx&#39;&gt;&lt;/script&gt;</code></li>
-<li><code>&lt;script src=&#39;xxx&#39; async&gt;&lt;/script&gt;</code></li>
-<li><code>&lt;script src=&#39;xxx&#39; defer&gt;&lt;/script&gt;</code></li>
-</ul>
-<p>那么这三类 script 有什么区别呢？</p>
-<h3 id="script"><a href="#script" class="headerlink" title="script"></a>script</h3><p>浏览器在解析 HTML 的时候，如果遇到一个没有任何属性的 script 标签，就会暂停解析，先发送网络请求获取该 JS 脚本的代码内容，然后让 JS 引擎执行该代码，当代码执行完毕后恢复解析。整个过程如下图所示：<br><img src="https://user-images.githubusercontent.com/22131908/156511880-6cc4f42a-225d-406c-8fad-31dc6a360690.png" alt="image"><br>可以看到，script 阻塞了浏览器对 HTML 的解析，如果获取 JS 脚本的网络请求迟迟得不到响应，或者 JS 脚本执行时间过长，都会导致白屏，用户看不到页面内容。</p>
-<span id="more"></span> 
-<h3 id="async-script"><a href="#async-script" class="headerlink" title="async script"></a>async script</h3><p><code>async</code> 表示异步，例如七牛的源码中就有大量的 <code>async</code> 出现：<br><img src="https://user-images.githubusercontent.com/22131908/156512013-caef9049-da96-40c3-9b1f-ea500883f72c.png" alt="image"><br>当浏览器遇到带有 <code>async</code> 属性的 script 时，请求该脚本的网络请求是异步的，不会阻塞浏览器解析 HTML，一旦网络请求回来之后，如果此时 HTML 还没有解析完，浏览器会暂停解析，先让 JS 引擎执行代码，执行完毕后再进行解析，图示如下：<br><img src="https://user-images.githubusercontent.com/22131908/156512078-ba9bca83-12e4-4a68-a480-26f1ccfbc8ef.png" alt="image"><br>当然，如果在 JS 脚本请求回来之前，HTML 已经解析完毕了，那就啥事没有，立即执行 JS 代码，如下图所示：<br><img src="https://user-images.githubusercontent.com/22131908/156512159-a4d76bf9-e1f4-44d6-9c26-2d7e09bbb4a4.png" alt="image"><br>所以 <code>async</code> 是不可控的，因为执行时间不确定，你如果在异步 JS 脚本中获取某个 DOM 元素，有可能获取到也有可能获取不到。而且如果存在多个 <code>async</code> 的时候，它们之间的执行顺序也不确定，完全依赖于网络传输结果，谁先到执行谁。</p>
-<h3 id="defer-script"><a href="#defer-script" class="headerlink" title="defer script"></a>defer script</h3><p><code>defer</code> 表示延迟，例如掘金的源码中就有大量的 <code>defe</code>r 出现：<br><img src="https://user-images.githubusercontent.com/22131908/156512240-f9f4127f-6f54-4f06-b091-7c5889c3c99e.png" alt="image"><br>当浏览器遇到带有 <code>defer</code> 属性的 script 时，获取该脚本的网络请求也是异步的，不会阻塞浏览器解析 HTML，一旦网络请求回来之后，如果此时 HTML 还没有解析完，浏览器不会暂停解析并执行 JS 代码，而是等待 HTML 解析完毕再执行 JS 代码，图示如下：<br><img src="https://user-images.githubusercontent.com/22131908/156512315-482c78e4-bfcd-488c-aad4-d907193d1637.png" alt="image"><br>如果存在多个 <code>defer script</code> 标签，浏览器（IE9及以下除外）会保证它们按照在 HTML 中出现的顺序执行，不会破坏 JS 脚本之间的依赖关系。</p>
-<p>最后，根据上面的分析，不同类型 script 的执行顺序及其是否阻塞解析 HTML 总结如下：</p>
-<table>
-<thead>
-<tr>
-<th>script 标签</th>
-<th>JS 执行顺序</th>
-<th>是否阻塞解析 HTML</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>&lt;script&gt;</code></td>
-<td>在 HTML 中的顺序</td>
-<td>阻塞</td>
-</tr>
-<tr>
-<td><code>&lt;script async&gt;</code></td>
-<td>网络请求返回顺序</td>
-<td>可能阻塞，也可能不阻塞</td>
-</tr>
-<tr>
-<td><code>&lt;script defer&gt;</code></td>
-<td>在 HTML 中的顺序</td>
-<td>不阻塞</td>
-</tr>
-</tbody></table>
-<blockquote>
-<p>本文摘自 <a target="_blank" rel="noopener" href="https://juejin.cn/post/6894629999215640583">图解 script 标签中的 async 和 defer 属性</a></p>
-</blockquote>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><code>electron</code> 通过 <code>ffi-napi</code> 调用 <code>c++</code> 编译的动态链接库 <code>dll</code>，<code>node</code> 调用又要依赖 <code>node-gyp</code> 以及 <code>windows-build-tools</code>。废话不多说，上步骤。</p>
+<h2 id="步骤（按顺序安装）"><a href="#步骤（按顺序安装）" class="headerlink" title="步骤（按顺序安装）"></a>步骤（按顺序安装）</h2><ol>
+<li>安装 <code>node-gyp</code>, <code>npm i -g node-gyp@latest</code> ，这里我安装是最新版本，目前版本号是 <code>node-gyp@9.0.0</code></li>
+<li>设置 <code>node_gyp</code> 环境变量(这里是下划线别搞错了，<strong>非常关键</strong>)：<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config set node_gyp xxx/bin/node-gyp.js </span><br></pre></td></tr></table></figure>
+参考（指向 <code>bin</code> 目录下的 <code>node-gyp.js</code>）</li>
+</ol>
+<p><img src="/2021/01/04/electron-%E4%BD%BF%E7%94%A8ffi-napi%E8%B0%83%E7%94%A8dll%E8%B8%A9%E5%9D%91%E6%8C%87%E5%8D%97/electron.png" alt="WechatIMG89.png"></p>
+<ol start="3">
+<li>安装 <code>windows-build-tools</code>，不使用 <code>npm</code> 包，至于原因为什么<a target="_blank" rel="noopener" href="https://github.com/nodejs/node-gyp#on-windows">参考</a>，先下载 <a target="_blank" rel="noopener" href="https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools">Visual Studio 构建工具</a>， 然后选择 <strong>使用C++的桌面开发</strong>，安装完毕依赖</li>
+<li>设置环境变量<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 这里我装的是最新的vs 2022，所以后面是2022</span><br><span class="line">npm config set msvs_version 2022 </span><br></pre></td></tr></table></figure></li>
+<li>安装 <code>ffi-napi</code>， <code>npm i ffi-napi</code>，大功告成。</li>
+</ol>
+<h2 id="dll打包路径配置"><a href="#dll打包路径配置" class="headerlink" title="dll打包路径配置"></a>dll打包路径配置</h2><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/9fc6ae1a7317">参考</a></p>
 
       
     </div>
@@ -393,7 +362,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/async-defer/" rel="tag"># async&defer</a>
+            <a href="/tags/electron-ffi-napi/" rel="tag"># electron ffi-napi</a>
           
         </div>
       
@@ -406,8 +375,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/07/04/react-setState%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6/" rel="next" title="react setState执行机制">
-                <i class="fa fa-chevron-left"></i> react setState执行机制
+              <a href="/2020/12/18/setTimeout-%E5%AE%9E%E7%8E%B0-setInterval/" rel="next" title="setTimeout 实现 setInterval">
+                <i class="fa fa-chevron-left"></i> setTimeout 实现 setInterval
               </a>
             
           </div>
@@ -416,8 +385,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2020/07/31/React-15-%E5%92%8C-React-16-%E7%9A%84%E5%8C%BA%E5%88%AB/" rel="prev" title="React 15 和 React 16 的区别">
-                React 15 和 React 16 的区别 <i class="fa fa-chevron-right"></i>
+              <a href="/2021/01/09/%E7%AE%97%E6%B3%95-1487-%E4%BF%9D%E8%AF%81%E6%96%87%E4%BB%B6%E5%90%8D%E5%94%AF%E4%B8%80/" rel="prev" title="算法:1487. 保证文件名唯一">
+                算法:1487. 保证文件名唯一 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -567,7 +536,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#script"><span class="nav-number">1.</span> <span class="nav-text">script</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#async-script"><span class="nav-number">2.</span> <span class="nav-text">async script</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#defer-script"><span class="nav-number">3.</span> <span class="nav-text">defer script</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-number">1.</span> <span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A5%E9%AA%A4%EF%BC%88%E6%8C%89%E9%A1%BA%E5%BA%8F%E5%AE%89%E8%A3%85%EF%BC%89"><span class="nav-number">2.</span> <span class="nav-text">步骤（按顺序安装）</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#dll%E6%89%93%E5%8C%85%E8%B7%AF%E5%BE%84%E9%85%8D%E7%BD%AE"><span class="nav-number">3.</span> <span class="nav-text">dll打包路径配置</span></a></li></ol></div>
             
 
           </div>
