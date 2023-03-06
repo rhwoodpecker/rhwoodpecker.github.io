@@ -78,7 +78,7 @@
 <link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
 
 
-  <meta name="keywords" content="async&defer," />
+  <meta name="keywords" content="https," />
 
 
 
@@ -94,25 +94,21 @@
 
 
 
-<meta name="description" content="在 HTML 中会遇到以下三类 script：  &lt;script src&#x3D;&#39;xxx&#39;&gt;&lt;&#x2F;script&gt; &lt;script src&#x3D;&#39;xxx&#39; async&gt;&lt;&#x2F;script&gt; &lt;script src&#x3D;&#39;xxx&#39; defer&gt;&lt;&#x2F;script&gt;  那么这三类 script 有什么区别">
+<meta name="description" content="密码学基础首先介绍公钥、私钥、对称加密和非对称加密都是什么。 为什么需要加密？ http的内容是明文传输的，明文数据会经过中间代理服务器、路由器、wifi热点、通信服务运营商等多个物理节点，如果信息在传输过程中被劫持，传输的内容就完全暴露了。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="图解 script 标签中的 async 和 defer 属性">
-<meta property="og:url" content="http://example.com/2020/07/30/%E5%9B%BE%E8%A7%A3-script-%E6%A0%87%E7%AD%BE%E4%B8%AD%E7%9A%84-async-%E5%92%8C-defer-%E5%B1%9E%E6%80%A7/index.html">
+<meta property="og:title" content="HTTPS加密过程详解">
+<meta property="og:url" content="http://example.com/2021/02/28/HTTPS%E5%8A%A0%E5%AF%86%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3/index.html">
 <meta property="og:site_name" content="个人博客">
-<meta property="og:description" content="在 HTML 中会遇到以下三类 script：  &lt;script src&#x3D;&#39;xxx&#39;&gt;&lt;&#x2F;script&gt; &lt;script src&#x3D;&#39;xxx&#39; async&gt;&lt;&#x2F;script&gt; &lt;script src&#x3D;&#39;xxx&#39; defer&gt;&lt;&#x2F;script&gt;  那么这三类 script 有什么区别">
+<meta property="og:description" content="密码学基础首先介绍公钥、私钥、对称加密和非对称加密都是什么。 为什么需要加密？ http的内容是明文传输的，明文数据会经过中间代理服务器、路由器、wifi热点、通信服务运营商等多个物理节点，如果信息在传输过程中被劫持，传输的内容就完全暴露了。">
 <meta property="og:locale">
-<meta property="og:image" content="https://user-images.githubusercontent.com/22131908/156511880-6cc4f42a-225d-406c-8fad-31dc6a360690.png">
-<meta property="og:image" content="https://user-images.githubusercontent.com/22131908/156512013-caef9049-da96-40c3-9b1f-ea500883f72c.png">
-<meta property="og:image" content="https://user-images.githubusercontent.com/22131908/156512078-ba9bca83-12e4-4a68-a480-26f1ccfbc8ef.png">
-<meta property="og:image" content="https://user-images.githubusercontent.com/22131908/156512159-a4d76bf9-e1f4-44d6-9c26-2d7e09bbb4a4.png">
-<meta property="og:image" content="https://user-images.githubusercontent.com/22131908/156512240-f9f4127f-6f54-4f06-b091-7c5889c3c99e.png">
-<meta property="og:image" content="https://user-images.githubusercontent.com/22131908/156512315-482c78e4-bfcd-488c-aad4-d907193d1637.png">
-<meta property="article:published_time" content="2020-07-30T13:10:40.000Z">
-<meta property="article:modified_time" content="2023-03-03T14:22:18.408Z">
+<meta property="og:image" content="http://example.com/2021/02/28/HTTPS%E5%8A%A0%E5%AF%86%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3/https.png">
+<meta property="og:image" content="http://example.com/2021/02/28/HTTPS%E5%8A%A0%E5%AF%86%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3/https_process.png">
+<meta property="article:published_time" content="2021-02-28T04:56:54.000Z">
+<meta property="article:modified_time" content="2023-03-06T06:39:09.917Z">
 <meta property="article:author" content="Ren Hao">
-<meta property="article:tag" content="async&amp;defer">
+<meta property="article:tag" content="https">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://user-images.githubusercontent.com/22131908/156511880-6cc4f42a-225d-406c-8fad-31dc6a360690.png">
+<meta name="twitter:image" content="http://example.com/2021/02/28/HTTPS%E5%8A%A0%E5%AF%86%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3/https.png">
 
 
 
@@ -141,13 +137,13 @@
 
 
 
-  <link rel="canonical" href="http://example.com/2020/07/30/图解-script-标签中的-async-和-defer-属性/"/>
+  <link rel="canonical" href="http://example.com/2021/02/28/HTTPS加密过程详解/"/>
 
 
 
 
 
-  <title>图解 script 标签中的 async 和 defer 属性 | 个人博客</title>
+  <title>HTTPS加密过程详解 | 个人博客</title>
   
 
 
@@ -270,7 +266,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/07/30/%E5%9B%BE%E8%A7%A3-script-%E6%A0%87%E7%AD%BE%E4%B8%AD%E7%9A%84-async-%E5%92%8C-defer-%E5%B1%9E%E6%80%A7/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/02/28/HTTPS%E5%8A%A0%E5%AF%86%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="">
@@ -287,7 +283,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">图解 script 标签中的 async 和 defer 属性</h1>
+          <h1 class="post-title" itemprop="name headline">HTTPS加密过程详解</h1>
         
 
         <div class="post-meta">
@@ -299,8 +295,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-07-30T21:10:40+08:00">
-                2020-07-30
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-02-28T12:56:54+08:00">
+                2021-02-28
               </time>
             
 
@@ -337,45 +333,47 @@
       
 
       
-        <p>在 HTML 中会遇到以下三类 script：</p>
-<ul>
-<li><code>&lt;script src=&#39;xxx&#39;&gt;&lt;/script&gt;</code></li>
-<li><code>&lt;script src=&#39;xxx&#39; async&gt;&lt;/script&gt;</code></li>
-<li><code>&lt;script src=&#39;xxx&#39; defer&gt;&lt;/script&gt;</code></li>
-</ul>
-<p>那么这三类 script 有什么区别呢？</p>
-<h3 id="script"><a href="#script" class="headerlink" title="script"></a>script</h3><p>浏览器在解析 HTML 的时候，如果遇到一个没有任何属性的 script 标签，就会暂停解析，先发送网络请求获取该 JS 脚本的代码内容，然后让 JS 引擎执行该代码，当代码执行完毕后恢复解析。整个过程如下图所示：<br><img src="https://user-images.githubusercontent.com/22131908/156511880-6cc4f42a-225d-406c-8fad-31dc6a360690.png" alt="image"><br>可以看到，script 阻塞了浏览器对 HTML 的解析，如果获取 JS 脚本的网络请求迟迟得不到响应，或者 JS 脚本执行时间过长，都会导致白屏，用户看不到页面内容。</p>
-<span id="more"></span> 
-<h3 id="async-script"><a href="#async-script" class="headerlink" title="async script"></a>async script</h3><p><code>async</code> 表示异步，例如七牛的源码中就有大量的 <code>async</code> 出现：<br><img src="https://user-images.githubusercontent.com/22131908/156512013-caef9049-da96-40c3-9b1f-ea500883f72c.png" alt="image"><br>当浏览器遇到带有 <code>async</code> 属性的 script 时，请求该脚本的网络请求是异步的，不会阻塞浏览器解析 HTML，一旦网络请求回来之后，如果此时 HTML 还没有解析完，浏览器会暂停解析，先让 JS 引擎执行代码，执行完毕后再进行解析，图示如下：<br><img src="https://user-images.githubusercontent.com/22131908/156512078-ba9bca83-12e4-4a68-a480-26f1ccfbc8ef.png" alt="image"><br>当然，如果在 JS 脚本请求回来之前，HTML 已经解析完毕了，那就啥事没有，立即执行 JS 代码，如下图所示：<br><img src="https://user-images.githubusercontent.com/22131908/156512159-a4d76bf9-e1f4-44d6-9c26-2d7e09bbb4a4.png" alt="image"><br>所以 <code>async</code> 是不可控的，因为执行时间不确定，你如果在异步 JS 脚本中获取某个 DOM 元素，有可能获取到也有可能获取不到。而且如果存在多个 <code>async</code> 的时候，它们之间的执行顺序也不确定，完全依赖于网络传输结果，谁先到执行谁。</p>
-<h3 id="defer-script"><a href="#defer-script" class="headerlink" title="defer script"></a>defer script</h3><p><code>defer</code> 表示延迟，例如掘金的源码中就有大量的 <code>defe</code>r 出现：<br><img src="https://user-images.githubusercontent.com/22131908/156512240-f9f4127f-6f54-4f06-b091-7c5889c3c99e.png" alt="image"><br>当浏览器遇到带有 <code>defer</code> 属性的 script 时，获取该脚本的网络请求也是异步的，不会阻塞浏览器解析 HTML，一旦网络请求回来之后，如果此时 HTML 还没有解析完，浏览器不会暂停解析并执行 JS 代码，而是等待 HTML 解析完毕再执行 JS 代码，图示如下：<br><img src="https://user-images.githubusercontent.com/22131908/156512315-482c78e4-bfcd-488c-aad4-d907193d1637.png" alt="image"><br>如果存在多个 <code>defer script</code> 标签，浏览器（IE9及以下除外）会保证它们按照在 HTML 中出现的顺序执行，不会破坏 JS 脚本之间的依赖关系。</p>
-<p>最后，根据上面的分析，不同类型 script 的执行顺序及其是否阻塞解析 HTML 总结如下：</p>
-<table>
-<thead>
-<tr>
-<th>script 标签</th>
-<th>JS 执行顺序</th>
-<th>是否阻塞解析 HTML</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>&lt;script&gt;</code></td>
-<td>在 HTML 中的顺序</td>
-<td>阻塞</td>
-</tr>
-<tr>
-<td><code>&lt;script async&gt;</code></td>
-<td>网络请求返回顺序</td>
-<td>可能阻塞，也可能不阻塞</td>
-</tr>
-<tr>
-<td><code>&lt;script defer&gt;</code></td>
-<td>在 HTML 中的顺序</td>
-<td>不阻塞</td>
-</tr>
-</tbody></table>
-<blockquote>
-<p>本文摘自 <a target="_blank" rel="noopener" href="https://juejin.cn/post/6894629999215640583">图解 script 标签中的 async 和 defer 属性</a></p>
+        <h2 id="密码学基础"><a href="#密码学基础" class="headerlink" title="密码学基础"></a>密码学基础</h2><p>首先介绍公钥、私钥、对称加密和非对称加密都是什么。</p>
+<h3 id="为什么需要加密？"><a href="#为什么需要加密？" class="headerlink" title="为什么需要加密？"></a>为什么需要加密？</h3><blockquote>
+<p>http的内容是明文传输的，明文数据会经过中间代理服务器、路由器、wifi热点、通信服务运营商等多个物理节点，如果信息在传输过程中被劫持，传输的内容就完全暴露了。</p>
 </blockquote>
+<span id="more"></span>
+<h3 id="1-对称加密"><a href="#1-对称加密" class="headerlink" title="1. 对称加密"></a>1. 对称加密</h3><p>简单说，发送方使用密钥加密，接收方使用这一密钥解密，双方持有相同的密钥进行通信，加密速度快</p>
+<p>缺点：无法保证安全，传输过程中此密钥可能被别人知道来解密，获取信息。</p>
+<h3 id="2-公钥与私钥"><a href="#2-公钥与私钥" class="headerlink" title="2. 公钥与私钥"></a>2. 公钥与私钥</h3><p>公钥是对外开放的，私钥是自己拥有的。</p>
+<h3 id="3-非对称加密"><a href="#3-非对称加密" class="headerlink" title="3. 非对称加密"></a>3. 非对称加密</h3><p>用公钥加密的数据，只能用私钥解密。 用私钥加密的数据，只能用公钥解密。</p>
+<p>缺点：服务器将公钥以明文形式发送给浏览器，浏览器向服务器传输数据时使用公钥加密传输，在服务器端用私钥解密。此过程可以做到安全传输。</p>
+<p>但是服务器向浏览器的传输安全无法保证，如果服务器以私钥加密数据传输，那么浏览器用公钥可以解密，但此公钥一开始以明文形式发送，其他人也可以获取。</p>
+<h2 id="HTTPS加密"><a href="#HTTPS加密" class="headerlink" title="HTTPS加密"></a>HTTPS加密</h2><p><code>HTTPS</code> 在传统的 <code>HTTP</code> 和 <code>TCP</code> 之间加了一层用于加密解密的 <code>SSL/TLS</code> 层（<strong>安全套接层Secure Sockets Layer&#x2F;安全传输层Transport Layer Security</strong>）层。</p>
+<h3 id="非对称加密-对称加密"><a href="#非对称加密-对称加密" class="headerlink" title="非对称加密+对称加密"></a>非对称加密+对称加密</h3><p>过程：</p>
+<ul>
+<li>服务器有用于非对称加密的公钥和私钥；</li>
+<li>浏览器向服务器发出请求，服务器将公钥A以明文形式发送给浏览器；</li>
+<li>浏览器随机生成一个用于对称加密的密钥K，用公钥A加密后发给服务器；</li>
+<li>服务器用私钥A解密，得到密钥K；</li>
+<li>这样就确保双方都有密钥K，且别人没有。之后双方所有数据的发送都通过密钥K加密解密即可。</li>
+</ul>
+<p>缺点：<br>中间人攻击可能调换公钥A，而浏览器无法确认收到的公钥是否是网站服务器自己的。这样就使中间人得到了密钥K。</p>
+<p><img src="/2021/02/28/HTTPS%E5%8A%A0%E5%AF%86%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3/https.png" alt="https"></p>
+<h3 id="CA证书"><a href="#CA证书" class="headerlink" title="CA证书"></a>CA证书</h3><p>CA机构颁发的“<strong>身份证</strong>”就是数字证书。</p>
+<p>网站在使用 <code>HTTPS</code> 前，需要向 <code>CA</code> 机构申领一份数字证书，数字证书里含有证书持有者信息、公钥信息等。服务器把证书传输给浏览器，浏览器从证书里获取公钥就行了，证书就如身份证，证明“该公钥对应该网站”。</p>
+<h4 id="如何保证此证书不被篡改呢？"><a href="#如何保证此证书不被篡改呢？" class="headerlink" title="如何保证此证书不被篡改呢？"></a>如何保证此证书不被篡改呢？</h4><ul>
+<li>证书中含有三个部分:”证书内容，散列算法，加密密文”。</li>
+<li>证书内容会被散列算法 <code>hash()</code> 计算出 <code>hash</code> 值，然后使用 <code>CA</code> 机构提供的私钥进行 <code>RSA</code> 加密。</li>
+<li>当浏览器发起请求时，服务器将该数字证书发送给浏览器，浏览器通过 <code>CA</code> 机构提供的公钥对加密密文进行解密获得散列值（数字签名），同时将证书内容使用相同的散列算法进行 <code>Hash</code> 得到另一个散列值，比对两个散列值，如果两者相等则说明证书没问题。</li>
+</ul>
+<h3 id="HTTPS加密过程："><a href="#HTTPS加密过程：" class="headerlink" title="HTTPS加密过程："></a>HTTPS加密过程：</h3><ol>
+<li>客户端请求服务器获取证书公钥</li>
+<li>客户端(SSL&#x2F;TLS)解析证书（无效会弹出警告）</li>
+<li>生成随机值</li>
+<li>用公钥加密随机值生成密钥</li>
+<li>客户端将秘钥发送给服务器</li>
+<li>服务端用私钥解密秘钥得到随机值 （4.5.6 非对称加密过程）</li>
+<li>将信息和随机值混合在一起进行对称加密</li>
+<li>将加密的内容发送给客户端</li>
+<li>客户端用密钥解密信息</li>
+</ol>
+<p><img src="/2021/02/28/HTTPS%E5%8A%A0%E5%AF%86%E8%BF%87%E7%A8%8B%E8%AF%A6%E8%A7%A3/https_process.png" alt="https_process"></p>
 
       
     </div>
@@ -393,7 +391,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/async-defer/" rel="tag"># async&defer</a>
+            <a href="/tags/https/" rel="tag"># https</a>
           
         </div>
       
@@ -406,8 +404,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2020/07/04/react-setState%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6/" rel="next" title="react setState执行机制">
-                <i class="fa fa-chevron-left"></i> react setState执行机制
+              <a href="/2021/01/13/%E7%AE%97%E6%B3%95-3-%E6%97%A0%E9%87%8D%E5%A4%8D%E5%AD%97%E7%AC%A6%E7%9A%84%E6%9C%80%E9%95%BF%E5%AD%90%E4%B8%B2/" rel="next" title="算法:3. 无重复字符的最长子串">
+                <i class="fa fa-chevron-left"></i> 算法:3. 无重复字符的最长子串
               </a>
             
           </div>
@@ -415,10 +413,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2020/07/31/React-15-%E5%92%8C-React-16-%E7%9A%84%E5%8C%BA%E5%88%AB/" rel="prev" title="React 15 和 React 16 的区别">
-                React 15 和 React 16 的区别 <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -567,7 +561,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#script"><span class="nav-number">1.</span> <span class="nav-text">script</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#async-script"><span class="nav-number">2.</span> <span class="nav-text">async script</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#defer-script"><span class="nav-number">3.</span> <span class="nav-text">defer script</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%86%E7%A0%81%E5%AD%A6%E5%9F%BA%E7%A1%80"><span class="nav-number">1.</span> <span class="nav-text">密码学基础</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%8A%A0%E5%AF%86%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">为什么需要加密？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86"><span class="nav-number">1.2.</span> <span class="nav-text">1. 对称加密</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%85%AC%E9%92%A5%E4%B8%8E%E7%A7%81%E9%92%A5"><span class="nav-number">1.3.</span> <span class="nav-text">2. 公钥与私钥</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86"><span class="nav-number">1.4.</span> <span class="nav-text">3. 非对称加密</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#HTTPS%E5%8A%A0%E5%AF%86"><span class="nav-number">2.</span> <span class="nav-text">HTTPS加密</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%9D%9E%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86-%E5%AF%B9%E7%A7%B0%E5%8A%A0%E5%AF%86"><span class="nav-number">2.1.</span> <span class="nav-text">非对称加密+对称加密</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#CA%E8%AF%81%E4%B9%A6"><span class="nav-number">2.2.</span> <span class="nav-text">CA证书</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E4%BF%9D%E8%AF%81%E6%AD%A4%E8%AF%81%E4%B9%A6%E4%B8%8D%E8%A2%AB%E7%AF%A1%E6%94%B9%E5%91%A2%EF%BC%9F"><span class="nav-number">2.2.1.</span> <span class="nav-text">如何保证此证书不被篡改呢？</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#HTTPS%E5%8A%A0%E5%AF%86%E8%BF%87%E7%A8%8B%EF%BC%9A"><span class="nav-number">2.3.</span> <span class="nav-text">HTTPS加密过程：</span></a></li></ol></li></ol></div>
             
 
           </div>
