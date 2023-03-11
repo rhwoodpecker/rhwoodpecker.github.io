@@ -260,6 +260,136 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2020/12/18/setTimeout-%E5%AE%9E%E7%8E%B0-setInterval/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2020/12/18/setTimeout-%E5%AE%9E%E7%8E%B0-setInterval/" itemprop="url">setTimeout 实现 setInterval</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-12-18T20:04:52+08:00">
+                2020-12-18
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h3 id="为什么要用setTimeout实现setInterval"><a href="#为什么要用setTimeout实现setInterval" class="headerlink" title="为什么要用setTimeout实现setInterval"></a>为什么要用setTimeout实现setInterval</h3><p><strong>setInterval 缺点</strong></p>
+<ul>
+<li>使用 <code>setInterval</code> 时，某些间隔会被跳过；即使 <code>setInterval</code> 调用的方法报错了，他仍然会继续执行。</li>
+<li>无视网络延迟，可能多个定时器会连续执行；</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p> 每个 <code>setTimeout</code> 产生的任务会直接 <code>push</code> 到<strong>任务队列</strong>中；而 <code>setInterval</code> 在每次把任务 <code>push</code> 到任务队列<strong>前</strong>，都要进行一下判断(看上次的任务是否仍在队列中)。</p>
+<p>因而我们一般用 <code>setTimeout</code> 模拟 <code>setInterval</code>，来规避掉上面的缺点。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2020/12/18/setTimeout-%E5%AE%9E%E7%8E%B0-setInterval/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://example.com/2020/11/20/%E5%AE%9E%E7%8E%B0-add-1-2-3-%E5%87%BD%E6%95%B0%E6%9F%AF%E9%87%8C%E5%8C%96/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -497,140 +627,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2020/08/20/React-Fiber-%E6%9E%B6%E6%9E%84/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="个人博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2020/08/20/React-Fiber-%E6%9E%B6%E6%9E%84/" itemprop="url">React Fiber 架构</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2020-08-20T16:03:37+08:00">
-                2020-08-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="一、Fiber-架构诞生"><a href="#一、Fiber-架构诞生" class="headerlink" title="一、Fiber 架构诞生"></a>一、Fiber 架构诞生</h2><ul>
-<li>当项目变得庞大、组件数量繁多、遇到大计算量的操作或者设备性能不足使得页面掉帧，导致卡顿。</li>
-</ul>
-<h3 id="React-渲染页面的两个阶段"><a href="#React-渲染页面的两个阶段" class="headerlink" title="React 渲染页面的两个阶段"></a>React 渲染页面的两个阶段</h3><ul>
-<li>调度阶段（<code>reconciliation</code>）：在这个阶段 <code>React</code> 会更新数据生成新的 <code>Virtual DOM</code>，然后通过<strong>Diff</strong>算法，快速找出需要更新的元素，放到更新队列中去，得到新的更新队列。</li>
-<li>渲染阶段（<code>commit</code>）：这个阶段 <code>React</code> 会遍历更新队列，将其所有的变更一次性更新到 <code>DOM</code> 上。
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2020/08/20/React-Fiber-%E6%9E%B6%E6%9E%84/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <a class="extend prev" rel="prev" href="/page/2/">&lt;</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/">&gt;</a>
+    <a class="extend prev" rel="prev" href="/page/2/">&lt;</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/4/">&gt;</a>
   </nav>
 
 
@@ -676,7 +677,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">15</span>
+                <span class="site-state-item-count">16</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -689,7 +690,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
