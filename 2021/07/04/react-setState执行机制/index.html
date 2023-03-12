@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="react," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="一、开发中常遇到的问题1. setState是同步还是异步的，为什么有的时候不能立即拿到更新结果而有的时候可以?1.1 钩子函数和React合成事件中的setState">
+<meta property="og:type" content="article">
+<meta property="og:title" content="react setState执行机制">
+<meta property="og:url" content="http://example.com/2021/07/04/react-setState%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6/index.html">
+<meta property="og:site_name" content="个人博客">
+<meta property="og:description" content="一、开发中常遇到的问题1. setState是同步还是异步的，为什么有的时候不能立即拿到更新结果而有的时候可以?1.1 钩子函数和React合成事件中的setState">
+<meta property="og:locale">
+<meta property="og:image" content="https://user-images.githubusercontent.com/22131908/156884563-2e8215c7-9b6c-4585-88d1-2a8a1d60be29.png">
+<meta property="article:published_time" content="2021-07-04T12:18:22.000Z">
+<meta property="article:modified_time" content="2023-03-12T03:49:37.403Z">
+<meta property="article:author" content="Ren Hao">
+<meta property="article:tag" content="react">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://user-images.githubusercontent.com/22131908/156884563-2e8215c7-9b6c-4585-88d1-2a8a1d60be29.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":5},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://example.com/2021/07/04/react-setState执行机制/"/>
+
+
+
+
+
+  <title>react setState执行机制 | 个人博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2021/07/04/react-setState%E6%89%A7%E8%A1%8C%E6%9C%BA%E5%88%B6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">react setState执行机制</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-07-04T20:18:22+08:00">
+                2021-07-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="一、开发中常遇到的问题"><a href="#一、开发中常遇到的问题" class="headerlink" title="一、开发中常遇到的问题"></a>一、开发中常遇到的问题</h2><h3 id="1-setState是同步还是异步的，为什么有的时候不能立即拿到更新结果而有的时候可以"><a href="#1-setState是同步还是异步的，为什么有的时候不能立即拿到更新结果而有的时候可以" class="headerlink" title="1. setState是同步还是异步的，为什么有的时候不能立即拿到更新结果而有的时候可以?"></a>1. setState是同步还是异步的，为什么有的时候不能立即拿到更新结果而有的时候可以?</h3><h4 id="1-1-钩子函数和React合成事件中的setState"><a href="#1-1-钩子函数和React合成事件中的setState" class="headerlink" title="1.1 钩子函数和React合成事件中的setState"></a>1.1 钩子函数和React合成事件中的<code>setState</code></h4><span id="more"></span> 
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">state = &#123;</span><br><span class="line">    <span class="attr">index</span>: <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"><span class="title function_">componentDidMount</span>(<span class="params"></span>) &#123;</span><br><span class="line"><span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123;</span><br><span class="line">    <span class="attr">index</span>: <span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">index</span> + <span class="number">1</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;state&#x27;</span>, <span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">index</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123;</span><br><span class="line">    <span class="attr">index</span>: <span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">index</span> + <span class="number">1</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;state&#x27;</span>, <span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">index</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行结果:</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">state, 0</span><br><span class="line">state, 0</span><br></pre></td></tr></table></figure>
+<p>说明：</p>
+<ul>
+<li>调用<code>setState</code>不会立即更新</li>
+<li>所有组件使用的是同一套更新机制，当所有组件<code>didmount</code>后，父组件<code>didmount</code>，然后执行更新</li>
+<li>更新时会把每个组件的更新合并，每个组件只会触发一次更新的生命周期。</li>
+</ul>
+<h4 id="1-2-异步函数和原生事件中的setstate？"><a href="#1-2-异步函数和原生事件中的setstate？" class="headerlink" title="1.2 异步函数和原生事件中的setstate？"></a>1.2 异步函数和原生事件中的setstate？</h4><p>在<code>setTimeout</code>中调用<code>setState</code>（例子和在浏览器原生事件以及接口回调中执行效果相同）</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line">state = &#123;</span><br><span class="line"><span class="attr">index</span>: <span class="number">0</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">componentDidMount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="built_in">setTimeout</span>(<span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;调用setState&#x27;</span>);</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123;</span><br><span class="line">            <span class="attr">index</span>: <span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">index</span> + <span class="number">1</span></span><br><span class="line">        &#125;)</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;state&#x27;</span>, <span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">index</span>);</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;调用setState&#x27;</span>);</span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123;</span><br><span class="line">            <span class="attr">index</span>: <span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">index</span> + <span class="number">1</span></span><br><span class="line">        &#125;)</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;state&#x27;</span>, <span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">index</span>);</span><br><span class="line">    &#125;, <span class="number">0</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">componentDidUpdate</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;componentDidUpdate&#x27;</span>)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_">render</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;render&#x27;</span>)</span><br><span class="line">    <span class="keyword">return</span></span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行结果:</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">调用setState</span><br><span class="line">render</span><br><span class="line">componentDidUpdate</span><br><span class="line">state, <span class="number">1</span></span><br><span class="line">调用setState</span><br><span class="line">render</span><br><span class="line">componentDidUpdate</span><br><span class="line">state, <span class="number">2</span></span><br></pre></td></tr></table></figure>
+<p>说明：</p>
+<ul>
+<li><code>setState</code>同步更新</li>
+</ul>
+<ol start="2">
+<li>为什么有时连续两次setState只有一次生效？</li>
+</ol>
+<hr>
+<p>分别执行以下代码：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">componentDidMount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123; <span class="attr">index</span>: <span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">index</span> + <span class="number">1</span> &#125;, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">index</span>);</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">setState</span>(&#123; <span class="attr">index</span>: <span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">index</span> + <span class="number">1</span> &#125;, <span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">index</span>);</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">componentDidMount</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">setState</span>(<span class="function">(<span class="params">preState</span>) =&gt;</span> (&#123; <span class="attr">index</span>: preState.<span class="property">index</span> + <span class="number">1</span> &#125;), <span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">index</span>);</span><br><span class="line">    &#125;)</span><br><span class="line">    <span class="variable language_">this</span>.<span class="title function_">setState</span>(<span class="function"><span class="params">preState</span> =&gt;</span> (&#123; <span class="attr">index</span>: preState.<span class="property">index</span> + <span class="number">1</span> &#125;), <span class="function">() =&gt;</span> &#123;</span><br><span class="line">        <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="variable language_">this</span>.<span class="property">state</span>.<span class="property">index</span>);</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>执行结果：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span></span><br><span class="line"><span class="number">1</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">2</span></span><br></pre></td></tr></table></figure>
+<p>说明：</p>
+<ul>
+<li>直接传递对象的<code>setstate</code>会被合并成一次</li>
+<li>使用函数传递<code>state</code>不会被合并</li>
+</ul>
+<h2 id="二、setState执行过程"><a href="#二、setState执行过程" class="headerlink" title="二、setState执行过程"></a>二、setState执行过程</h2><h3 id="1-流程图"><a href="#1-流程图" class="headerlink" title="1. 流程图"></a>1. 流程图</h3><hr>
+<p><img src="https://user-images.githubusercontent.com/22131908/156884563-2e8215c7-9b6c-4585-88d1-2a8a1d60be29.png" alt="image"></p>
+<p>说明：</p>
+<ul>
+<li><code>partialState</code>：<code>setState</code>传入的第一个参数，对象或函数</li>
+<li><code>_pendingStateQueue</code>：当前组件等待执行更新的<code>state</code>队列</li>
+<li><code>isBatchingUpdates</code>：<code>react</code>用于标识当前是否处于批量更新状态，所有组件公用</li>
+<li><code>dirtyComponent</code>：当前所有处于待更新状态的组件队列</li>
+<li><code>transcation</code>：<code>react</code>的事务机制，在被事务调用的方法外包装<code>n</code>个<code>waper</code>对象，并一次执行：<code>waper.init</code>、被调用方法、<code>waper.close</code></li>
+<li><code>FLUSH_BATCHED_UPDATES</code>：用于执行更新的<code>waper</code>，只有一个<code>close</code>方法</li>
+</ul>
+<h3 id="2-执行过程"><a href="#2-执行过程" class="headerlink" title="2. 执行过程"></a>2. 执行过程</h3><hr>
+<p>对照上面流程图的文字说明，大概可分为以下几步：</p>
+<ol>
+<li>将<code>setState</code>传入的<code>partialState</code>参数存储在当前组件实例的<code>state</code>暂存队列中。</li>
+<li>判断当前<code>React</code>是否处于批量更新状态，如果是，将当前组件加入待更新的组件队列中。</li>
+<li>如果未处于批量更新状态，将批量更新状态标识设置为<code>true</code>，用事务再次调用前一步方法，保证当前组件加入到了待更新组件队列中。</li>
+<li>调用事务的<code>waper</code>方法，遍历待更新组件队列依次执行更新。</li>
+<li>执行生命周期<code>componentWillReceiveProps</code>。</li>
+<li>将组件的<code>state</code>暂存队列中的<code>state</code>进行合并，获得最终要更新的state对象，并将队列置为空。</li>
+<li>执行生命周期<code>componentShouldUpdate</code>，根据返回值判断是否要继续更新。</li>
+<li>执行生命周期<code>componentWillUpdate</code>。</li>
+<li>执行真正的更新<code>render</code>。</li>
+<li>执行生命周期<code>componentDidUpdate</code>。</li>
+</ol>
+<h2 id="三、总结"><a href="#三、总结" class="headerlink" title="三、总结"></a>三、总结</h2><h3 id="1-钩子函数和合成事件中："><a href="#1-钩子函数和合成事件中：" class="headerlink" title="1.钩子函数和合成事件中："></a>1.钩子函数和合成事件中：</h3><hr>
+<p>在<code>react</code>的生命周期和合成事件中，<code>react</code>仍然处于他的更新机制中，这时<code>isBranchUpdate</code>为<code>true</code>。</p>
+<p>按照上述过程，这时无论调用多少次<code>setState</code>，都会不会执行更新，而是将要更新的state存入<code>_pendingStateQueue</code>，将要更新的组件存入<code>dirtyComponent</code>。</p>
+<p>当上一次更新机制执行完毕，以生命周期为例，所有组件，即最顶层组件<code>didmount</code>后会将<code>isBranchUpdate</code>设置为<code>false</code>。这时将执行之前累积的<code>setState</code>。</p>
+<h3 id="2-异步函数和原生事件中"><a href="#2-异步函数和原生事件中" class="headerlink" title="2. 异步函数和原生事件中"></a>2. 异步函数和原生事件中</h3><hr>
+<p>由执行机制看，<code>setState</code>本身并不是异步的，而是如果在调用<code>setState</code>时，如果<code>react</code>正处于更新过程，当前更新会被暂存，等上一次更新执行后在执行，这个过程给人一种异步的假象。</p>
+<p>在生命周期，根据JS的异步机制，会将异步函数先暂存，等所有同步代码执行完毕后在执行，这时上一次更新过程已经执行完毕，<code>isBranchUpdate</code>被设置为<code>false</code>，根据上面的流程，这时再调用<code>setState</code>即可立即执行更新，拿到更新结果。</p>
+<h2 id="3-partialState合并机制"><a href="#3-partialState合并机制" class="headerlink" title="3. partialState合并机制"></a>3. <code>partialState</code>合并机制</h2><hr>
+<p>我们看下流程中<code>_processPendingState</code>的代码，这个函数是用来合并<code>state</code>暂存队列的，最后返回一个合并后的<code>state</code>。</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">_processPendingState</span>: <span class="keyword">function</span> (<span class="params">props, context</span>) &#123;</span><br><span class="line"><span class="keyword">var</span> inst = <span class="variable language_">this</span>.<span class="property">_instance</span>;</span><br><span class="line"><span class="keyword">var</span> queue = <span class="variable language_">this</span>.<span class="property">_pendingStateQueue</span>;</span><br><span class="line"><span class="keyword">var</span> replace = <span class="variable language_">this</span>.<span class="property">_pendingReplaceState</span>;</span><br><span class="line"><span class="variable language_">this</span>.<span class="property">_pendingReplaceState</span> = <span class="literal">false</span>;</span><br><span class="line"><span class="variable language_">this</span>.<span class="property">_pendingStateQueue</span> = <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (!queue) &#123;</span><br><span class="line">    <span class="keyword">return</span> inst.<span class="property">state</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (replace &amp;&amp; queue.<span class="property">length</span> === <span class="number">1</span>) &#123;</span><br><span class="line"><span class="keyword">return</span> queue[<span class="number">0</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> nextState = <span class="title function_">_assign</span>(&#123;&#125;, replace ? queue[<span class="number">0</span>] : inst.<span class="property">state</span>);</span><br><span class="line"><span class="keyword">for</span> (<span class="keyword">var</span> i = replace ? <span class="number">1</span> : <span class="number">0</span>; i &lt; queue.<span class="property">length</span>; i++) &#123;</span><br><span class="line">    <span class="keyword">var</span> partial = queue[i];</span><br><span class="line">    <span class="title function_">_assign</span>(nextState, <span class="keyword">typeof</span> partial === <span class="string">&#x27;function&#x27;</span> ? partial.<span class="title function_">call</span>(inst, nextState, props, context) : partial);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">return</span> nextState;</span><br><span class="line">&#125;,</span><br></pre></td></tr></table></figure>
+<p>我们只需要关注下面这段代码:</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="title function_">_assign</span>(nextState, <span class="keyword">typeof</span> partial === <span class="string">&#x27;function&#x27;</span> ? partial.<span class="title function_">call</span>(inst, nextState, props, context) : partial);</span><br></pre></td></tr></table></figure>
+<p>如果传入的是对象，很明显会被合并成一次：</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="title class_">Object</span>.<span class="title function_">assign</span>(</span><br><span class="line">    nextState,</span><br><span class="line">    &#123;<span class="attr">index</span>: state.<span class="property">index</span>+ <span class="number">1</span>&#125;,</span><br><span class="line">    &#123;<span class="attr">index</span>: state.<span class="property">index</span>+ <span class="number">1</span>&#125;</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>如果传入的是函数，函数的参数<code>preState</code>是前一次合并后的结果，所以计算结果是准确的。</p>
+<h3 id="4-componentDidMount调用setstate"><a href="#4-componentDidMount调用setstate" class="headerlink" title="4. componentDidMount调用setstate"></a>4. <code>componentDidMount</code>调用<code>setstate</code></h3><hr>
+<blockquote>
+<p>在componentDidMount()中，你 可以立即调用setState()。它将会触发一次额外的渲染，但是它将在浏览器刷新屏幕之前发生。这保证了在此情况下即使render()将会调用两次，用户也不会看到中间状态。谨慎使用这一模式，因为它常导致性能问题。在大多数情况下，你可以 在constructor()中使用赋值初始状态来代替。然而，有些情况下必须这样，比如像模态框和工具提示框。这时，你需要先测量这些DOM节点，才能渲染依赖尺寸或者位置的某些东西。</p>
+</blockquote>
+<p>以上是官方文档的说明，不推荐直接在<code>componentDidMount</code>直接调用<code>setState</code>，由上面的分析：<code>componentDidMount</code>本身处于一次更新中，我们又调用了一次<code>setState</code>，就会在未来再进行一次<code>render</code>，造成不必要的性能浪费，大多数情况可以设置初始值来搞定。</p>
+<p>当然在<code>componentDidMount</code>我们可以调用接口，再回调中去修改<code>state</code>，这是正确的做法。</p>
+<p>当<code>state</code>初始值依赖<code>dom</code>属性时，在<code>componentDidMount</code>中<code>setState</code>是无法避免的。</p>
+<h3 id="5-componentWillUpdate-componentDidUpdate"><a href="#5-componentWillUpdate-componentDidUpdate" class="headerlink" title="5. componentWillUpdate componentDidUpdate"></a>5. <code>componentWillUpdate</code> <code>componentDidUpdate</code></h3><hr>
+<p>这两个生命周期中不能调用<code>setState</code>。</p>
+<p>由上面的流程图很容易发现，在它们里面调用<code>setState</code>会造成死循环，导致程序崩溃。</p>
+<h3 id="6-推荐使用方式"><a href="#6-推荐使用方式" class="headerlink" title="6. 推荐使用方式"></a>6. 推荐使用方式</h3><p>在调用<code>setState</code>时使用函数传递<code>state</code>值，在回调函数中获取最新更新后的<code>state</code>。</p>
+<p><a target="_blank" rel="noopener" href="https://juejin.cn/post/6844903781813993486#heading-5">文章摘自 抖音前端安全 -【React深入】setState的执行机制</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/react/" rel="tag"># react</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2021/06/20/%E4%B8%80%E6%AC%A1%E5%BC%84%E6%87%82Event-Loop/" rel="next" title="一次弄懂Event Loop">
+                <i class="fa fa-chevron-left"></i> 一次弄懂Event Loop
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2021/07/30/%E5%9B%BE%E8%A7%A3-script-%E6%A0%87%E7%AD%BE%E4%B8%AD%E7%9A%84-async-%E5%92%8C-defer-%E5%B1%9E%E6%80%A7/" rel="prev" title="图解 script 标签中的 async 和 defer 属性">
+                图解 script 标签中的 async 和 defer 属性 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/rhwoodpecker" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:rhwoodpecker@163.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                    
+                      E-Mail
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%BC%80%E5%8F%91%E4%B8%AD%E5%B8%B8%E9%81%87%E5%88%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">1.</span> <span class="nav-text">一、开发中常遇到的问题</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-setState%E6%98%AF%E5%90%8C%E6%AD%A5%E8%BF%98%E6%98%AF%E5%BC%82%E6%AD%A5%E7%9A%84%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E6%9C%89%E7%9A%84%E6%97%B6%E5%80%99%E4%B8%8D%E8%83%BD%E7%AB%8B%E5%8D%B3%E6%8B%BF%E5%88%B0%E6%9B%B4%E6%96%B0%E7%BB%93%E6%9E%9C%E8%80%8C%E6%9C%89%E7%9A%84%E6%97%B6%E5%80%99%E5%8F%AF%E4%BB%A5"><span class="nav-number">1.1.</span> <span class="nav-text">1. setState是同步还是异步的，为什么有的时候不能立即拿到更新结果而有的时候可以?</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-1-%E9%92%A9%E5%AD%90%E5%87%BD%E6%95%B0%E5%92%8CReact%E5%90%88%E6%88%90%E4%BA%8B%E4%BB%B6%E4%B8%AD%E7%9A%84setState"><span class="nav-number">1.1.1.</span> <span class="nav-text">1.1 钩子函数和React合成事件中的setState</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#1-2-%E5%BC%82%E6%AD%A5%E5%87%BD%E6%95%B0%E5%92%8C%E5%8E%9F%E7%94%9F%E4%BA%8B%E4%BB%B6%E4%B8%AD%E7%9A%84setstate%EF%BC%9F"><span class="nav-number">1.1.2.</span> <span class="nav-text">1.2 异步函数和原生事件中的setstate？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E3%80%81setState%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B"><span class="nav-number">2.</span> <span class="nav-text">二、setState执行过程</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E6%B5%81%E7%A8%8B%E5%9B%BE"><span class="nav-number">2.1.</span> <span class="nav-text">1. 流程图</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E6%89%A7%E8%A1%8C%E8%BF%87%E7%A8%8B"><span class="nav-number">2.2.</span> <span class="nav-text">2. 执行过程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%E3%80%81%E6%80%BB%E7%BB%93"><span class="nav-number">3.</span> <span class="nav-text">三、总结</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E9%92%A9%E5%AD%90%E5%87%BD%E6%95%B0%E5%92%8C%E5%90%88%E6%88%90%E4%BA%8B%E4%BB%B6%E4%B8%AD%EF%BC%9A"><span class="nav-number">3.1.</span> <span class="nav-text">1.钩子函数和合成事件中：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E5%BC%82%E6%AD%A5%E5%87%BD%E6%95%B0%E5%92%8C%E5%8E%9F%E7%94%9F%E4%BA%8B%E4%BB%B6%E4%B8%AD"><span class="nav-number">3.2.</span> <span class="nav-text">2. 异步函数和原生事件中</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-partialState%E5%90%88%E5%B9%B6%E6%9C%BA%E5%88%B6"><span class="nav-number">4.</span> <span class="nav-text">3. partialState合并机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#4-componentDidMount%E8%B0%83%E7%94%A8setstate"><span class="nav-number">4.1.</span> <span class="nav-text">4. componentDidMount调用setstate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-componentWillUpdate-componentDidUpdate"><span class="nav-number">4.2.</span> <span class="nav-text">5. componentWillUpdate componentDidUpdate</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#6-%E6%8E%A8%E8%8D%90%E4%BD%BF%E7%94%A8%E6%96%B9%E5%BC%8F"><span class="nav-number">4.3.</span> <span class="nav-text">6. 推荐使用方式</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ren Hao</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
