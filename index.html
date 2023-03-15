@@ -387,6 +387,131 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/11/15/react-diff%E7%AE%97%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/11/15/react-diff%E7%AE%97%E6%B3%95/" itemprop="url">react diff算法</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-11-15T16:02:36+08:00">
+                2022-11-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>自从 <code>react</code> 从 <strong>15</strong> 升级到 <strong>16</strong>，对应的架构也作出了改变，之前有篇文章记录过 <code>react fiber</code>数的生成过程和遍历 <code>fiber</code> 树，但是对其 <code>diff</code> 算法还是了解颇浅，也查阅了不少文章，东抄西抄，mark 一下，加深印象。</p>
+<h2 id="Fiber-结构"><a href="#Fiber-结构" class="headerlink" title="Fiber 结构"></a>Fiber 结构</h2><p>由于 <code>react 16</code> 组件更新创建虚拟 <code>Dom</code> 和 <code>diff</code> 都是递归不可中断的，所以在 <code>16</code> 之后的版本引入 <code>Fiber</code> 结构，通过 <code>Fiber</code> 结构是构建对应的虚拟 <code>Dom</code> 树，以实现异步可中断更新，中断逻辑就不在这里提了，本文主要讲解下 <code>Diff</code> 算法：<br>首先我们看下<code>Fiber</code> 的数据结构长啥样，通过 <code>Fiber</code> 的一些属性去保存相关信息。</p>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2022/11/15/react-diff%E7%AE%97%E6%B3%95/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/06/20/react-router-dom-v6-%E5%92%8C-v5-%E5%AF%B9%E6%AF%94/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -515,138 +640,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/04/08/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E8%87%AA%E5%B7%B1%E5%AE%9E%E7%8E%B0env%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E6%96%87%E4%BB%B6%E5%8A%A0%E8%BD%BD/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="个人博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/04/08/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E8%87%AA%E5%B7%B1%E5%AE%9E%E7%8E%B0env%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E6%96%87%E4%BB%B6%E5%8A%A0%E8%BD%BD/" itemprop="url">前端项目自己实现env环境变量文件加载</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-04-08T15:43:59+08:00">
-                2022-04-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>大多数脚手架内部都实现了通过项目根目录 <code>.env.xxx</code> 文件来定义环境变量，我们自己去尝试去实现一下</p>
-<h2 id="env文件"><a href="#env文件" class="headerlink" title="env文件"></a>env文件</h2><h3 id="创建"><a href="#创建" class="headerlink" title="创建"></a>创建</h3><p>在项目根目录创建 <code>.env</code> 文件：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">// env 文件内容</span><br><span class="line">BASE_URL=http://xxxx.xx</span><br><span class="line">APP_KEY=*****</span><br></pre></td></tr></table></figure>
-
-<h3 id="读取"><a href="#读取" class="headerlink" title="读取"></a>读取</h3><p>将文件放在项目根目录 <code>package.json</code> 同级，借助第三方插件 <code>dotenv</code> 读取</p>
-<p>安装 <code>dotenv</code>:</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yarn add dotenv -D</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> dotenv = <span class="built_in">require</span>(<span class="string">&#x27;dotenv&#x27;</span>);</span><br><span class="line">dotenv.<span class="title function_">config</span>(); <span class="comment">// 配置后续说明</span></span><br><span class="line"></span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(process.<span class="property">env</span>.<span class="property">BASE_URL</span>); <span class="comment">// http://xxxx.xx</span></span><br></pre></td></tr></table></figure>
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2022/04/08/%E5%89%8D%E7%AB%AF%E9%A1%B9%E7%9B%AE%E8%87%AA%E5%B7%B1%E5%AE%9E%E7%8E%B0env%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F%E6%96%87%E4%BB%B6%E5%8A%A0%E8%BD%BD/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -697,7 +690,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-count">18</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -710,7 +703,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">14</span>
+                <span class="site-state-item-count">16</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
