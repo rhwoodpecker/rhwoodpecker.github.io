@@ -387,6 +387,132 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/12/28/css3-%E6%AF%9B%E7%8E%BB%E7%92%83%E5%B1%9E%E6%80%A7-backdrop-filter/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/12/28/css3-%E6%AF%9B%E7%8E%BB%E7%92%83%E5%B1%9E%E6%80%A7-backdrop-filter/" itemprop="url">css3 毛玻璃属性:backdrop-filter</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-12-28T16:44:02+08:00">
+                2022-12-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>最近看到一个好玩的 <code>css3</code> 属性，可以实现类似苹果手机状态栏下拉的毛玻璃效果，之前在项目中有使用到 <code>filter: blur()</code> 属性，但是他是针对元素本身的，元素里面文字也会跟着一起模糊。</p>
+<h2 id="backdrop-filter"><a href="#backdrop-filter" class="headerlink" title="backdrop-filter"></a>backdrop-filter</h2><p><code>backdrop-filter</code> 是将效果用于元素的背景，除了用 <code>blur</code> 实现模糊外，还有很多属性可以作用：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* 关键词值 */</span></span><br><span class="line">backdrop-<span class="attribute">filter</span>: none;</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 指向 SVG 滤镜的 URL */</span></span><br><span class="line">backdrop-<span class="attribute">filter</span>: <span class="built_in">url</span>(<span class="string">commonfilters.svg#filter</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">/* &lt;filter-function&gt; 滤镜函数值 */</span></span><br><span class="line">backdrop-<span class="attribute">filter</span>: <span class="built_in">blur</span>(<span class="number">2px</span>);</span><br><span class="line">backdrop-<span class="attribute">filter</span>: <span class="built_in">brightness</span>(<span class="number">60%</span>);</span><br><span class="line">backdrop-<span class="attribute">filter</span>: <span class="built_in">contrast</span>(<span class="number">40%</span>);</span><br><span class="line">backdrop-<span class="attribute">filter</span>: <span class="built_in">drop-shadow</span>(<span class="number">4px</span> <span class="number">4px</span> <span class="number">10px</span> blue);</span><br><span class="line">backdrop-<span class="attribute">filter</span>: <span class="built_in">grayscale</span>(<span class="number">30%</span>);</span><br><span class="line">backdrop-<span class="attribute">filter</span>: <span class="built_in">hue-rotate</span>(<span class="number">120deg</span>);</span><br><span class="line">backdrop-<span class="attribute">filter</span>: <span class="built_in">invert</span>(<span class="number">70%</span>);</span><br><span class="line">backdrop-<span class="attribute">filter</span>: <span class="built_in">opacity</span>(<span class="number">20%</span>);</span><br><span class="line">backdrop-<span class="attribute">filter</span>: <span class="built_in">sepia</span>(<span class="number">90%</span>);</span><br><span class="line">backdrop-<span class="attribute">filter</span>: <span class="built_in">saturate</span>(<span class="number">80%</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 多重滤镜 */</span></span><br><span class="line">backdrop-<span class="attribute">filter</span>: <span class="built_in">url</span>(<span class="string">filters.svg#filter</span>) <span class="built_in">blur</span>(<span class="number">4px</span>) <span class="built_in">saturate</span>(<span class="number">150%</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">/* 全局值 */</span></span><br><span class="line">backdrop-<span class="attribute">filter</span>: inherit;</span><br><span class="line">backdrop-<span class="attribute">filter</span>: initial;</span><br><span class="line">backdrop-<span class="attribute">filter</span>: unset;</span><br></pre></td></tr></table></figure>
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2022/12/28/css3-%E6%AF%9B%E7%8E%BB%E7%92%83%E5%B1%9E%E6%80%A7-backdrop-filter/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://example.com/2022/11/15/react-diff%E7%AE%97%E6%B3%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -499,152 +625,11 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2022/06/20/react-router-dom-v6-%E5%92%8C-v5-%E5%AF%B9%E6%AF%94/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="个人博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2022/06/20/react-router-dom-v6-%E5%92%8C-v5-%E5%AF%B9%E6%AF%94/" itemprop="url">react-router-dom v6 和 v5 对比</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-06-20T20:48:22+08:00">
-                2022-06-20
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>随着 <code>react hooks</code> 的到来，<code>react-router-dom</code> 从5到6也在变化上更好的支持了函数组件，本文主要记录下连个版本差异以及新版本的一些用法</p>
-<h2 id="版本差异"><a href="#版本差异" class="headerlink" title="版本差异"></a>版本差异</h2><h2 id="react-router-dom-v5"><a href="#react-router-dom-v5" class="headerlink" title="react-router-dom v5"></a>react-router-dom v5</h2><p><code>v5</code> 版本中对于 <code>class component</code>（16.8之前） 和 <code>function component</code> （16.8及之后hooks） 都做了对应的兼容<br>组件：</p>
-<ul>
-<li><code>Route</code>：路劲和组件的配对</li>
-<li><code>Link</code>： 相等于<code>a</code>标签</li>
-<li><code>NavLink</code>：也相当于<code>a</code>标签，但是有个属性<code>activeClassName</code>可以实现点击的高亮</li>
-<li><code>Switch</code>：是将<code>Route</code>包裹起来，当<code>Route</code>匹配上路径时就不再往下执行</li>
-<li><code>Redirect</code>：重定向路径</li>
-</ul>
-<p>路由三大属性（可以在组件props读取）：</p>
-<ul>
-<li><code>history</code>：一些编程式导航的方法 <code>push()</code>、<code>replace()</code>、<code>goForward()</code>、<code>go()</code>、<code>goBack()</code> 等</li>
-<li><code>location</code>：当前路由的一些信息，参数。<code>pathname</code>、<code>search</code>、<code>state</code> 等</li>
-<li><code>match</code>：当前路由的一些信息，参数。<code>path</code>、<code>url</code>、<code>params</code> 等</li>
-</ul>
-<p>新加的兼容hook组件的钩子函数：</p>
-<ul>
-<li><code>useHistory</code>：在组件内部实现编程式导航
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2022/06/20/react-router-dom-v6-%E5%92%8C-v5-%E5%AF%B9%E6%AF%94/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
   <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/6/">6</a><a class="extend next" rel="next" href="/page/2/">&gt;</a>
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><span class="space">&hellip;</span><a class="page-number" href="/page/7/">7</a><a class="extend next" rel="next" href="/page/2/">&gt;</a>
   </nav>
 
 
@@ -690,7 +675,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">18</span>
+                <span class="site-state-item-count">19</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -703,7 +688,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">16</span>
+                <span class="site-state-item-count">17</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
