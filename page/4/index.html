@@ -260,6 +260,138 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2022/01/04/electron-%E4%BD%BF%E7%94%A8ffi-napi%E8%B0%83%E7%94%A8dll%E8%B8%A9%E5%9D%91%E6%8C%87%E5%8D%97/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2022/01/04/electron-%E4%BD%BF%E7%94%A8ffi-napi%E8%B0%83%E7%94%A8dll%E8%B8%A9%E5%9D%91%E6%8C%87%E5%8D%97/" itemprop="url">electron 使用ffi-napi调用dll踩坑指南</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2022-01-04T20:44:29+08:00">
+                2022-01-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><code>electron</code> 通过 <code>ffi-napi</code> 调用 <code>c++</code> 编译的动态链接库 <code>dll</code>，<code>node</code> 调用又要依赖 <code>node-gyp</code> 以及 <code>windows-build-tools</code>。废话不多说，上步骤。</p>
+<h2 id="步骤（按顺序安装）"><a href="#步骤（按顺序安装）" class="headerlink" title="步骤（按顺序安装）"></a>步骤（按顺序安装）</h2><ol>
+<li>安装 <code>node-gyp</code>, <code>npm i -g node-gyp@latest</code> ，这里我安装是最新版本，目前版本号是 <code>node-gyp@9.0.0</code></li>
+<li>设置 <code>node_gyp</code> 环境变量(这里是下划线别搞错了，<strong>非常关键</strong>)：<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">npm config set node_gyp xxx/bin/node-gyp.js </span><br></pre></td></tr></table></figure>
+参考（指向 <code>bin</code> 目录下的 <code>node-gyp.js</code>）</li>
+</ol>
+<p><img src="/2022/01/04/electron-%E4%BD%BF%E7%94%A8ffi-napi%E8%B0%83%E7%94%A8dll%E8%B8%A9%E5%9D%91%E6%8C%87%E5%8D%97/electron.png" alt="WechatIMG89.png"></p>
+<ol start="3">
+<li>安装 <code>windows-build-tools</code>，不使用 <code>npm</code> 包，至于原因为什么<a target="_blank" rel="noopener" href="https://github.com/nodejs/node-gyp#on-windows">参考</a>，先下载 <a target="_blank" rel="noopener" href="https://visualstudio.microsoft.com/thank-you-downloading-visual-studio/?sku=BuildTools">Visual Studio 构建工具</a>， 然后选择 <strong>使用C++的桌面开发</strong>，安装完毕依赖</li>
+<li>设置环境变量<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># 这里我装的是最新的vs 2022，所以后面是2022</span><br><span class="line">npm config set msvs_version 2022 </span><br></pre></td></tr></table></figure></li>
+<li>安装 <code>ffi-napi</code>， <code>npm i ffi-napi</code>，大功告成。</li>
+</ol>
+<h2 id="dll打包路径配置"><a href="#dll打包路径配置" class="headerlink" title="dll打包路径配置"></a>dll打包路径配置</h2><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/9fc6ae1a7317">参考</a></p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://example.com/2021/12/18/setTimeout-%E5%AE%9E%E7%8E%B0-setInterval/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -507,126 +639,6 @@
 
 
     
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2021/09/10/%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85%E6%A8%A1%E5%9E%8B/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="个人博客">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2021/09/10/%E5%8F%91%E5%B8%83%E8%AE%A2%E9%98%85%E6%A8%A1%E5%9E%8B/" itemprop="url">发布订阅模型</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2021-09-10T19:31:46+08:00">
-                2021-09-10
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">EventEmitter</span> &#123;</span><br><span class="line">    <span class="title function_">constructor</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">handlers</span> = &#123;&#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 添加监听</span></span><br><span class="line">    <span class="title function_">on</span>(<span class="params">event, callback</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span>(!<span class="variable language_">this</span>.<span class="property">handlers</span>[event]) <span class="variable language_">this</span>.<span class="property">handlers</span>[event] = [];</span><br><span class="line">        <span class="variable language_">this</span>.<span class="property">handlers</span>[event].<span class="title function_">push</span>(callback);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 移除监听</span></span><br><span class="line">    <span class="title function_">off</span>(<span class="params">event, callback</span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> callbacks = <span class="variable language_">this</span>.<span class="property">handlers</span>[event];</span><br><span class="line">        <span class="keyword">const</span> index = callbacks.<span class="title function_">indexOf</span>(callback);</span><br><span class="line">        <span class="keyword">if</span>(index !== -<span class="number">1</span>) callbacks.<span class="title function_">splice</span>(index, <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 派发事件</span></span><br><span class="line">    <span class="title function_">emit</span>(<span class="params">event, ...args</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span>(<span class="variable language_">this</span>.<span class="property">handlers</span>[event]) &#123;</span><br><span class="line">            <span class="variable language_">this</span>.<span class="property">handlers</span>[event].<span class="title function_">forEach</span>(<span class="function"><span class="params">callback</span> =&gt;</span> <span class="title function_">callback</span>(...args));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">// 监听一次</span></span><br><span class="line">    <span class="title function_">once</span>(<span class="params">event, callback</span>) &#123;</span><br><span class="line">        <span class="keyword">const</span> <span class="title function_">wrapper</span> = (<span class="params">...args</span>) =&gt; &#123;</span><br><span class="line">            <span class="title function_">callback</span>(...args);</span><br><span class="line">            <span class="variable language_">this</span>.<span class="title function_">off</span>(event, callback);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="variable language_">this</span>.<span class="title function_">on</span>(event, wrapper);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">const</span> event1 = <span class="keyword">new</span> <span class="title class_">EventEmitter</span>();</span><br><span class="line"><span class="keyword">const</span> <span class="title function_">handleMessage</span> = arg =&gt;&#123;</span><br><span class="line">    <span class="variable language_">console</span>.<span class="title function_">log</span>(<span class="string">&#x27;message:&#x27;</span>,arg)</span><br><span class="line">&#125;</span><br><span class="line">event1.<span class="title function_">on</span>(<span class="string">&#x27;message&#x27;</span>, handleMessage)</span><br><span class="line"></span><br><span class="line">event1.<span class="title function_">emit</span>(<span class="string">&#x27;message&#x27;</span>, &#123;<span class="attr">text</span>: <span class="string">&#x27;hello&#x27;</span>&#125;)</span><br><span class="line"></span><br><span class="line"><span class="comment">// message: &#123; text: &#x27;hello&#x27; &#125;   </span></span><br></pre></td></tr></table></figure>
-
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
   </section>
 
   
@@ -677,7 +689,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives/">
-                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-count">20</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -690,7 +702,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">17</span>
+                <span class="site-state-item-count">19</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

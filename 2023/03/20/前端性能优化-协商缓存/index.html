@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.2" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="性能优化,协商缓存," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.2" />
+
+
+
+
+
+
+<meta name="description" content="由浏览器缓存引申到性能优化，虽然需要运维配置，但是前端也是需要了解，mark一下  1.什么是缓存浏览器缓存是浏览器对之前请求过的文件进行缓存，以便下一次访问时重复使用，节省带宽，提高访问速度，降低服务器压力http 缓存机制主要在 http 响应头中设定，响应头中相关字段为 Expires、Cache-Control、Last-Modified、Etag。HTTP 1.0协议 中的。简而言之，">
+<meta property="og:type" content="article">
+<meta property="og:title" content="前端性能优化:协商缓存">
+<meta property="og:url" content="http://example.com/2023/03/20/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98/index.html">
+<meta property="og:site_name" content="个人博客">
+<meta property="og:description" content="由浏览器缓存引申到性能优化，虽然需要运维配置，但是前端也是需要了解，mark一下  1.什么是缓存浏览器缓存是浏览器对之前请求过的文件进行缓存，以便下一次访问时重复使用，节省带宽，提高访问速度，降低服务器压力http 缓存机制主要在 http 响应头中设定，响应头中相关字段为 Expires、Cache-Control、Last-Modified、Etag。HTTP 1.0协议 中的。简而言之，">
+<meta property="og:locale">
+<meta property="og:image" content="http://example.com/2023/03/20/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98/p1.png">
+<meta property="og:image" content="http://example.com/2023/03/20/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98/p2.png">
+<meta property="og:image" content="http://example.com/2023/03/20/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98/p3.png">
+<meta property="og:image" content="http://example.com/2023/03/20/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98/p4.png">
+<meta property="og:image" content="http://example.com/2023/03/20/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98/p5.png">
+<meta property="og:image" content="http://example.com/2023/03/20/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98/p6.png">
+<meta property="article:published_time" content="2023-03-20T09:33:51.000Z">
+<meta property="article:modified_time" content="2023-03-20T13:45:51.149Z">
+<meta property="article:author" content="Ren Hao">
+<meta property="article:tag" content="性能优化">
+<meta property="article:tag" content="协商缓存">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/03/20/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98/p1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":5},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://example.com/2023/03/20/前端性能优化-协商缓存/"/>
+
+
+
+
+
+  <title>前端性能优化:协商缓存 | 个人博客</title>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">个人博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/03/20/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="个人博客">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">前端性能优化:协商缓存</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2023-03-20T17:33:51+08:00">
+                2023-03-20
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>由浏览器缓存引申到性能优化，虽然需要运维配置，但是前端也是需要了解，mark一下</p>
+</blockquote>
+<h2 id="1-什么是缓存"><a href="#1-什么是缓存" class="headerlink" title="1.什么是缓存"></a>1.什么是缓存</h2><p>浏览器缓存是浏览器对之前请求过的文件进行缓存，以便下一次访问时重复使用，节省带宽，提高访问速度，降低服务器压力<br><code>http</code> 缓存机制主要在 <code>http</code> 响应头中设定，响应头中相关字段为 <code>Expires</code>、<code>Cache-Control</code>、<code>Last-Modified</code>、<code>Etag</code>。<br><code>HTTP 1.0协议</code> 中的。简而言之，就是告诉浏览器在约定的这个时间前，可以直接从缓存中获取资源，而无需跑到服务器去获取。</p>
+<p><code>Expires</code> 因为是对时间设定的，且时间是 <code>Greenwich Mean Time （GMT）</code>，而不是本地时间，所以对时间要求较高。</p>
+<span id="more"></span>
+<h2 id="2-浏览器是如何判断是否使用缓存"><a href="#2-浏览器是如何判断是否使用缓存" class="headerlink" title="2. 浏览器是如何判断是否使用缓存"></a>2. 浏览器是如何判断是否使用缓存</h2><p>第一次请求站点：<br><img src="/2023/03/20/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98/p1.png" alt="p1"><br>第二次请求相同站点：<br><img src="/2023/03/20/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98/p2.png" alt="p2"></p>
+<h2 id="3-缓存的类别"><a href="#3-缓存的类别" class="headerlink" title="3. 缓存的类别"></a>3. 缓存的类别</h2><p><strong>强缓存</strong> 和 <strong>协商缓存</strong></p>
+<h3 id="强缓存"><a href="#强缓存" class="headerlink" title="强缓存"></a>强缓存</h3><p>浏览器不会向服务器发送任何请求，直接从本地缓存中读取文件并返回 <code>Status Code: 200 OK</code><br>浏览器请求头如下：<br><img src="/2023/03/20/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98/p3.png" alt="p3"></p>
+<blockquote>
+<p>200 from disk cache： 不访问服务器，已经在之前的某个时间加载过该资源，直接从硬盘中读取缓存，关闭浏览器后，数据依然存在，此资源不会随着该页面的关闭而释放掉下次打开仍然会是from disk cache。</p>
+</blockquote>
+<p><img src="/2023/03/20/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98/p4.png" alt="p4"></p>
+<blockquote>
+<p>200 form memory cache : 不访问服务器，一般已经加载过该资源且缓存在了内存当中，直接从内存中读取缓存。浏览器关闭后，数据将不存在（资源被释放掉了），再次打开相同的页面时，不会出现from memory cache。</p>
+</blockquote>
+<p>优先访问 <code>memory cache</code> ,其次是 <code>disk cache</code>，最后是请求网络资源</p>
+<p><strong>header 参数</strong></p>
+<ul>
+<li><code>Expires</code>：过期时间，如果设置了时间，则浏览器会在设置的时间内直接读取缓存，不再请求</li>
+<li><code>Cache-Control</code> ：当值设为 <code>max-age=300</code> 时，则代表在这个请求正确返回时间（浏览器也会记录下来）的5分钟内再次加载资源，就会命中强缓存。</li>
+</ul>
+<p><code>cache-control</code> ：除了该字段外，还有下面几个比较常用的设置值：</p>
+<ul>
+<li><code>max-age</code> ：用来设置资源可以被缓存多长时间，单位为秒；</li>
+<li><code>s-maxage</code>：和<code>max-age</code>是一样的，不过它只针对代理服务器缓存而言；</li>
+<li><code>public</code>：指示响应可被任何缓存区缓存；</li>
+<li><code>private</code>：只能针对个人用户，而不能被代理服务器缓存；</li>
+<li><code>no-cache</code>：强制客户端直接向服务器发送请求,也就是说每次请求都必须向服务器发送。服务器接收到请求，然后判断资源是否变更，是则返回新内容，否则返回 <code>304</code>，未变更。这个很容易让人产生误解，使人误以为是响应不被缓存。实际上<code>Cache-Control: no-cache</code> 是会被缓存的，只不过每次在向客户端（浏览器）提供响应数据时，缓存都要向服务器评估缓存响应的有效性。</li>
+<li><code>no-store</code>：禁止一切缓存（这个才是响应不被缓存的意思）。</li>
+</ul>
+<p>注意：<code>cache-control</code> 是 <code>http1.1</code> 的头字段，<code>expires</code> 是 <code>http1.0</code> 的头字段,如果 <code>expires</code> 和<code>cache-control</code> 同时存在，<code>cache-control</code> 会覆盖 <code>expires</code>，建议两个都写。</p>
+<h3 id="协商缓存"><a href="#协商缓存" class="headerlink" title="协商缓存"></a>协商缓存</h3><p>向服务器发送请求，服务器会根据这个请求的 <code>request header</code> 的一些参数来判断是否命中协商缓存，如果命中，则返回 <code>304</code> 状态码并带上新的 <code>response header</code> 通知浏览器从缓存中读取资源。<br><img src="/2023/03/20/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98/p5.png" alt="p5"><br><strong>header 参数</strong><br><code>Last-Modifed/If-Modified-Since</code> 和 <code>Etag/If-None-Match</code> 是分别成对出现的，呈一一对应关系</p>
+<p><strong>Etag&#x2F;If-None-Match：</strong></p>
+<ul>
+<li><code>Etag（响应头）</code> :<code>Etag</code> 是属于 <code>HTTP 1.1</code> 属性，它是由服务器（Apache或者其他工具）生成返回给前端，用来帮助服务器控制Web端的缓存验证。Apache中，<code>ETag</code> 的值，默认是对文件的索引节（INode），大小（Size）和最后修改时间（MTime）进行 <code>Hash</code> 后得到的，相当于文件指纹，这个是<strong>响应头字段</strong>。</li>
+<li><code>If-None-Match（请求头）</code> : 当资源过期时，浏览器发现响应头里有 <code>Etag</code> ,则再次像服务器请求时带上请求头 <code>if-none-match</code> (值是 <code>Etag</code> 的值)。服务器收到请求进行比对，决定返回 <code>200</code> 或 <code>304</code></li>
+</ul>
+<p><strong>Last-Modifed&#x2F;If-Modified-Since：</strong></p>
+<ul>
+<li><code>Last-Modified（响应头）</code> : 响应头标识了资源的修改时间，此后浏览器可据此进行缓存以及询问服务器</li>
+<li><code>If-Modified-Since（请求头）</code> :  当资源过期时（浏览器判断 <code>Cache-Control</code> 标识的 <code>max-age</code> 过期），发现响应头具有 <code>Last-Modified</code> 声明，则再次向服务器请求时带上头 <code>if-modified-since</code>，表示请求时间。服务器收到请求后发现有 <code>if-modified-sinc</code> e则与被请求资源的最后修改时间进行对比（ <code>Last-Modified</code> ）,若最后修改时间较新（大），说明资源又被改过，则返回最新资源，<code>HTTP 200 OK</code> ;若最后修改时间较旧（小），说明资源无新修改，响应 <code>HTTP 304</code> 走缓存。<br><img src="/2023/03/20/%E5%89%8D%E7%AB%AF%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96-%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98/p6.png" alt="p6"></li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>先走强缓存再走协商缓存：</p>
+<ul>
+<li><code>Last-Modifed/If-Modified-Since</code> 的时间精度是秒，而 <code>Etag</code> 可以更精确(<code>hash</code>)。</li>
+<li><code>Etag</code> 优先级是高于 <code>Last-Modifed</code> 的，所以服务器会优先验证 <code>Etag</code></li>
+<li><code>Last-Modifed/If-Modified-Since</code> 是 <code>http1.0</code> 的头字段</li>
+</ul>
+<h2 id="如何去做性能优化"><a href="#如何去做性能优化" class="headerlink" title="如何去做性能优化"></a>如何去做性能优化</h2><blockquote>
+<p>前端在首屏渲染过程中会存在白屏时间，可以通过资源缓存策略去减少二次加载时间，我们对首页html做协商缓存，对一些资源文件增加强缓存</p>
+</blockquote>
+<p>如何用 <code>nginx</code> 配置强缓存和协商缓存：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">server &#123;</span><br><span class="line">  location ~* .(html)$ &#123;</span><br><span class="line">    access_log off;</span><br><span class="line">    add_header  Cache-Control  max-age=no-cache;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  location ~* .(css|js|png|jpg|jpeg|gif|gz|svg|mp4|ogg|ogv|webm|htc|xml|woff)$ &#123;</span><br><span class="line">    # 同上，通配所有以.css/.js/...结尾的请求</span><br><span class="line">    access_log off;</span><br><span class="line">    add_header    Cache-Control  max-age=360000;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>如上配置解析含义如下：</p>
+<ul>
+<li><code>~ </code>的含义是：通配任意字符（且大小写不敏感），因此 <code>~ .(html)$</code>的含义是：匹配所有以 <code>.html</code> 结尾的请求</li>
+<li><code>access_log off;</code> : 关闭日志功能</li>
+<li><code>add_header Cache-Control max-age=no-cache;</code> :   <code>html</code> 文件不设置强制缓存时间，走协商缓存，使用 <code>Last-Modified。no-cache</code>（nginx 返回文件会默认带上） 会发起往返通信来验证缓存的响应，但如果资源未发生变化，则不会下载，返回 <code>304</code>。</li>
+<li><code>add_header Cache-Control max-age=360000;</code> : 匹配后缀的文件设置强制缓存，且缓存的时间是 <code>360000</code> 秒，第一次访问的时候，从服务器请求，当除了第一次以外，再次刷新浏览器，会从浏览器缓存读取，那么强制缓存一般是从内存里面先读取，如果内存没有，再从硬盘读取，如果超时了再走协商缓存。</li>
+</ul>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96/" rel="tag"># 性能优化</a>
+          
+            <a href="/tags/%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98/" rel="tag"># 协商缓存</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2023/03/11/%E5%AE%9E%E7%8E%B0%E4%B8%80%E4%B8%AAc-nodejs-addon-%E5%A4%8D%E5%88%B6%E6%96%87%E4%BB%B6%E5%88%B0%E5%89%AA%E8%B4%B4%E6%9D%BF/" rel="next" title="实现一个c++ nodejs addon, 复制文件到剪贴板">
+                <i class="fa fa-chevron-left"></i> 实现一个c++ nodejs addon, 复制文件到剪贴板
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/avatar.jpg"
+               alt="" />
+          <p class="site-author-name" itemprop="name"></p>
+           
+              <p class="site-description motion-element" itemprop="description"></p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives/">
+                <span class="site-state-item-count">20</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">19</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/rhwoodpecker" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                    
+                      GitHub
+                    
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="mailto:rhwoodpecker@163.com" target="_blank" title="E-Mail">
+                  
+                    <i class="fa fa-fw fa-envelope"></i>
+                  
+                    
+                      E-Mail
+                    
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E4%BB%80%E4%B9%88%E6%98%AF%E7%BC%93%E5%AD%98"><span class="nav-number">1.</span> <span class="nav-text">1.什么是缓存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%B5%8F%E8%A7%88%E5%99%A8%E6%98%AF%E5%A6%82%E4%BD%95%E5%88%A4%E6%96%AD%E6%98%AF%E5%90%A6%E4%BD%BF%E7%94%A8%E7%BC%93%E5%AD%98"><span class="nav-number">2.</span> <span class="nav-text">2. 浏览器是如何判断是否使用缓存</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E7%BC%93%E5%AD%98%E7%9A%84%E7%B1%BB%E5%88%AB"><span class="nav-number">3.</span> <span class="nav-text">3. 缓存的类别</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BC%BA%E7%BC%93%E5%AD%98"><span class="nav-number">3.1.</span> <span class="nav-text">强缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%8D%8F%E5%95%86%E7%BC%93%E5%AD%98"><span class="nav-number">3.2.</span> <span class="nav-text">协商缓存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%80%BB%E7%BB%93"><span class="nav-number">3.3.</span> <span class="nav-text">总结</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E5%8E%BB%E5%81%9A%E6%80%A7%E8%83%BD%E4%BC%98%E5%8C%96"><span class="nav-number">4.</span> <span class="nav-text">如何去做性能优化</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Ren Hao</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" target="_blank" rel="noopener" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.2"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.2"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.2"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.2"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.2"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
